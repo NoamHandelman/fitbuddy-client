@@ -1,6 +1,6 @@
 import { User } from './user';
 
 export type UserResponse = {
-  user: User;
+  user?: User;
   message: string;
 };

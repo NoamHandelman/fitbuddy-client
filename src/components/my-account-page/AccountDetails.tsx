@@ -2,7 +2,7 @@
 
 import { ChangeEvent, FormEvent, useState } from 'react';
 import EditSection from '@/components/my-account-page/EditSection';
-import useAuth from '@/hooks/useAuth';
+import useAuth from '@/hooks/auth/useAuthMutation';
 import { editUserSchema } from '@/schemas/user.schema';
 import { ZodError } from 'zod';
 import useNotification from '@/hooks/useNotification';

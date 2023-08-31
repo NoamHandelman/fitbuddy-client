@@ -14,22 +14,32 @@ import {
 import {
   saveUserToLocalStorage,
   removeUserFromLocalStorage,
-} from '../lib/utils/localStorage';
+} from '../../lib/utils/localStorage';
 import { useRouter } from 'next/navigation';
-import useNotification from './useNotification';
+import useNotification from '../useNotification';
 import { useAppContext } from '@/context/app.context';
 import { UserResponse } from '@/types/userResponse';
+import useError from '../useError';
 
 const useAuth = () => {
-  const { errorNotify, successNotify } = useNotification();
+  const { successNotify } = useNotification();
+
   const router = useRouter();
+
   const { setUser } = useAppContext();
 
-  const handleSetUserOperation = (data: UserResponse, route?: string) => {
-    successNotify(data.message);
-    saveUserToLocalStorage('user', data.user);
-    setUser(data.user);
-    if (route) router.push(route);
+  const { errorHandler } = useError();
+
+  const handleSetUserOperation = (
+    userResponse: UserResponse,
+    route?: string
+  ) => {
+    if (userResponse.user) {
+      successNotify(userResponse.message);
+      saveUserToLocalStorage('user', userResponse.user);
+      setUser(userResponse.user);
+      if (route) router.push(route);
+    }
   };
 
   const handleUnsetUserOperations = () => {
@@ -40,67 +50,52 @@ const useAuth = () => {
 
   const { mutate: loginUser } = useMutation({
     mutationFn: (user: LoginUserInput) => loginUserService(user),
-    onSuccess: (data) => {
-      if (data.response.status !== 200) {
-        return errorNotify(data.data.message);
-      }
-      handleSetUserOperation(data.data, '/home');
+    onSuccess: (userResponse) => {
+      handleSetUserOperation(userResponse, '/home');
     },
-    onError: () => {
-      errorNotify('Failed to login, please try again later!');
+    onError: (error) => {
+      errorHandler(error);
     },
   });
 
   const { mutate: registerUser } = useMutation({
     mutationFn: (user: RegisterUserInput) => registerUserService(user),
-    onSuccess: (data) => {
-      if (data.response.status !== 201) {
-        return errorNotify(data.data.message);
-      }
-      handleSetUserOperation(data.data, '/home');
+    onSuccess: (userResponse) => {
+      handleSetUserOperation(userResponse, '/home');
     },
-    onError: () => {
-      errorNotify('Failed to register, please try again later!');
+    onError: (error) => {
+      errorHandler(error);
     },
   });
 
   const { mutate: editUser, isLoading: isLoadingEdit } = useMutation({
     mutationFn: (user: EditUserInput) => editUserService(user),
-    onSuccess: (data) => {
-      if (data.response.status !== 200) {
-        return errorNotify(data.data.message);
-      }
-      handleSetUserOperation(data.data);
+    onSuccess: (userResponse) => {
+      handleSetUserOperation(userResponse);
     },
-    onError: () => {
-      errorNotify('Failed to edit account, please try again later!');
+    onError: (error) => {
+      errorHandler(error);
     },
   });
 
   const { mutate: deleteUser, isLoading: isLoadingDeletion } = useMutation({
     mutationFn: deleteUserService,
-    onSuccess: (data) => {
-      if (data.response.status !== 200) {
-        return errorNotify(data.message);
-      }
-      successNotify(data.message);
+    onSuccess: (message) => {
+      successNotify(message);
       handleUnsetUserOperations();
     },
-    onError: () => {
-      errorNotify('Failed to delete account, please try again later!');
+    onError: (error) => {
+      errorHandler(error);
     },
   });
 
   const { mutate: logoutUser } = useMutation({
     mutationFn: logoutUserService,
-    onSuccess: (data) => {
-      if (data.response.status !== 200) {
-        return errorNotify(data.message);
-      }
+    onSuccess: () => {
       handleUnsetUserOperations();
     },
-    onError: () => {
-      errorNotify('Failed to logging out, please try again later!');
+    onError: (error) => {
+      errorHandler(error);
     },
   });
 

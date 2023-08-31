@@ -1,56 +1,60 @@
-import { Method } from '@/types/method';
-import { removeUserFromLocalStorage } from '@/lib/utils/localStorage';
-import toast from 'react-hot-toast';
+import { Profile } from '@/types/profile';
+import { CustomError } from '@/lib/utils/CustomError';
 
-export const baseProfileAPI = 'http://localhost:4000/api/profiles/';
+export const BASE_PROFILE_URL = 'http://localhost:8080/api/profiles/';
 
-const request = async (
-  url: string,
-  method: Method,
-  detail?: string,
-  detailData?: string
-) => {
-  try {
-    const options: RequestInit = {
-      method: method,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-    };
+export const getUserDetailsService = async (userId: string) => {
+  const response = await fetch(`${BASE_PROFILE_URL}${userId}`, {
+    method: 'GET',
+    credentials: 'include',
+  });
 
-    if (detail && detailData) {
-      options.body = JSON.stringify({ [detail]: detailData });
-    } else {
-      if (detail) {
-        options.body = JSON.stringify({ detail });
-      }
-    }
+  const data: { profile?: Profile; message?: string } = await response.json();
 
-    const response = await fetch(url, options);
-    const data = await response.json();
-
-    if (response.status === 401) {
-      toast.error(data.message);
-      setTimeout(() => {
-        removeUserFromLocalStorage('user');
-        return (window.location.href = '/');
-      }, 2000);
-    }
-
-    // if (response.ok) {
-    return { response, data };
-    // }
-  } catch (error: any) {
-    throw new Error(error);
+  if (!response.ok && data.message) {
+    throw new CustomError(data.message, response.status);
   }
+
+  return data;
 };
 
-export const getUserDetailsService = async (userId: string) =>
-  request(`${baseProfileAPI}${userId}`, 'GET');
+export const editProfileService = async (
+  detail: string,
+  detailData: string
+) => {
+  const response = await fetch(BASE_PROFILE_URL, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify({ [detail]: detailData }),
+  });
 
-export const editProfileService = async (detail: string, data: string) =>
-  request(baseProfileAPI, 'PATCH', detail, data);
+  const data: { profile?: Profile; message: string } = await response.json();
 
-export const deleteDetailsService = async (detail: string) =>
-  request(baseProfileAPI, 'DELETE', detail);
+  if (!response.ok) {
+    throw new CustomError(data.message, response.status);
+  }
+
+  return data;
+};
+
+export const deleteDetailsService = async (detail: string) => {
+  const response = await fetch(BASE_PROFILE_URL, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify({ detail }),
+  });
+
+  const data: { message: string } = await response.json();
+
+  if (!response.ok) {
+    throw new CustomError(data.message, response.status);
+  }
+
+  return data.message;
+};

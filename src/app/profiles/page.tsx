@@ -1,13 +1,13 @@
 import SearchProfiles from '@/components/profiles-page/SearchProfiles';
 import { Profile } from '@/types/profile';
-import { baseProfileAPI } from '@/services/profile.service';
+import { BASE_PROFILE_URL } from '@/services/profile.service';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 const getProfiles = async () => {
   const cookieStore = cookies();
   const tokenObj = cookieStore.get('token');
-  const response = await fetch(`${baseProfileAPI}`, {
+  const response = await fetch(`${BASE_PROFILE_URL}`, {
     cache: 'no-cache',
     credentials: 'include',
     headers: {
@@ -27,6 +27,8 @@ const getProfiles = async () => {
 
 const ProfilesPage = async () => {
   const profiles = await getProfiles();
+
+  console.log(profiles);
 
   if (profiles) {
     return (

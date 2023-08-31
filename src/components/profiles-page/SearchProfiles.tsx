@@ -3,7 +3,7 @@
 import { FC, useState } from 'react';
 import { LiaSearchSolid } from 'react-icons/lia';
 import { Profile } from '@/types/profile';
-import { baseProfileAPI } from '@/services/profile.service';
+import { BASE_PROFILE_URL } from '@/services/profile.service';
 import ProfileItem from './ProfileItem';
 import Spinner from '../ui/Spinner';
 import { useQuery } from '@tanstack/react-query';
@@ -23,7 +23,7 @@ const SearchProfiles: FC<SearchProfilesProps> = ({ initialProfiles }) => {
     queryFn: async () => {
       if (debouncedSearchInput) {
         const response = await fetch(
-          `${baseProfileAPI}searchProfiles?q=${debouncedSearchInput}`,
+          `${BASE_PROFILE_URL}searchProfiles?q=${debouncedSearchInput}`,
           {
             credentials: 'include',
           }

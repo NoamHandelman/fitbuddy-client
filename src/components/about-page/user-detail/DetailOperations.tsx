@@ -8,15 +8,7 @@ interface DetailOperationsProps {
   isEditing: boolean;
   data?: string;
   detail: string;
-  deleteDetail: UseMutateFunction<
-    {
-      response: Response;
-      data: any;
-    },
-    unknown,
-    string,
-    unknown
-  >;
+  deleteDetail: UseMutateFunction<string, unknown, string, unknown>;
   setDetailData: Dispatch<SetStateAction<string>>;
 }
 

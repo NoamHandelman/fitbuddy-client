@@ -12,18 +12,21 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import useNotification from './useNotification';
+import useError from './useError';
 
 const usePost = () => {
   const queryClient = useQueryClient();
 
-  const { errorNotify, successNotify } = useNotification();
+  const { successNotify } = useNotification();
 
-  const { data, isLoading, fetchNextPage, isFetchingNextPage } =
+  const { errorHandler } = useError();
+
+  const { data, isLoading, fetchNextPage, isFetchingNextPage, isError, error } =
     useInfiniteQuery(
       ['posts'],
       async ({ pageParam = 1 }) => {
         const data = await getAllPostsService(pageParam.toString());
-        return data?.data?.posts;
+        return data;
       },
       {
         getNextPageParam: (lastPage, allPages) => {
@@ -43,8 +46,8 @@ const usePost = () => {
       queryClient.invalidateQueries({ queryKey: ['posts'] });
       successNotify(data?.data.message);
     },
-    onError: () => {
-      errorNotify('Something went wrong, please try again');
+    onError: (error) => {
+      errorHandler(error);
     },
   });
 
@@ -55,8 +58,8 @@ const usePost = () => {
       queryClient.invalidateQueries(['posts']);
       successNotify(data?.data.message);
     },
-    onError: () => {
-      errorNotify('Something went wrong, please try again');
+    onError: (error) => {
+      errorHandler(error);
     },
   });
 
@@ -65,19 +68,19 @@ const usePost = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(['posts']);
     },
-    onError: () => {
-      errorNotify('Something went wrong, please try again');
+    onError: (error) => {
+      errorHandler(error);
     },
   });
 
   const { mutate: deletePost } = useMutation({
     mutationFn: deletePostService,
-    onSuccess: (data) => {
+    onSuccess: (message) => {
       queryClient.invalidateQueries(['posts']);
-      successNotify(data?.data.message);
+      successNotify(message);
     },
-    onError: () => {
-      errorNotify('Something went wrong, please try again');
+    onError: (error) => {
+      errorHandler(error);
     },
   });
 
@@ -86,6 +89,8 @@ const usePost = () => {
     isLoading,
     fetchNextPage,
     isFetchingNextPage,
+    isError,
+    error,
     createPost,
     editPost,
     handleLike,

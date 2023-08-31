@@ -5,6 +5,7 @@ import PostButtons from '../PostButtons';
 import NewComment from '../comments/NewComment';
 import CommentList from '../comments/CommentsList';
 import useCommentQuery from '@/hooks/comments/useCommentQuery';
+import useError from '@/hooks/useError';
 
 interface FullPostItemFooterProps {
   likes: Like[];
@@ -12,23 +13,31 @@ interface FullPostItemFooterProps {
 }
 
 const FullPostItemFooter: FC<FullPostItemFooterProps> = ({ likes, postId }) => {
-  const { data, isLoading } = useCommentQuery(postId);
+  const { data, isLoading, isError, error } = useCommentQuery(postId);
 
-  const comments = data?.data.comments as Comment[];
+  const { errorHandler } = useError();
 
-  return (
-    <>
-      <PostButtons likes={likes} postId={postId} />
-      <NewComment postId={postId} comments={comments} />
-      {comments && (
-        <CommentList
-          postId={postId}
-          comments={comments}
-          isLoading={isLoading}
-        />
-      )}
-    </>
-  );
+  const comments = data?.comments;
+
+  if (isError) {
+    errorHandler(error);
+  }
+
+  if (comments) {
+    return (
+      <>
+        <PostButtons likes={likes} postId={postId} />
+        <NewComment postId={postId} comments={comments} />
+        {comments && (
+          <CommentList
+            postId={postId}
+            comments={comments}
+            isLoading={isLoading}
+          />
+        )}
+      </>
+    );
+  }
 };
 
 export default FullPostItemFooter;

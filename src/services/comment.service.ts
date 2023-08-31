@@ -1,50 +1,68 @@
+import { CustomError } from '@/lib/utils/CustomError';
 import { Method } from '@/types/method';
-import { removeUserFromLocalStorage } from '@/lib/utils/localStorage';
-import { toast } from 'react-hot-toast';
+import { Comment } from '@/types/post';
 
-const baseCommentAPI = 'http://localhost:4000/api/comments/';
+const BASE_COMMENT_URL = 'http://localhost:8080/api/comments/';
 
-const request = async (url: string, method: Method, body?: string) => {
-  try {
-    const options: RequestInit = {
-      method: method,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-    };
+const setCommentRequest = async (url: string, method: Method, body: string) => {
+  const response = await fetch(url, {
+    method: method,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify({ text: body }),
+  });
 
-    if (body) {
-      options.body = JSON.stringify({ text: body });
-    }
+  const data: {
+    comment?: Comment;
+    message: string;
+  } = await response.json();
 
-    const response = await fetch(url, options);
-    const data = await response.json();
-
-    if (response.status === 401) {
-      toast.error(data.message);
-      setTimeout(() => {
-        removeUserFromLocalStorage('user');
-        return (window.location.href = '/');
-      }, 2000);
-    }
-
-    if (response.ok) {
-      return { response, data };
-    }
-  } catch (error: any) {
-    throw new Error(error);
+  if (!response.ok) {
+    throw new CustomError(data.message, response.status);
   }
+
+  return data;
+};
+
+export const getCommentsService = async (postId: string) => {
+  const response = await fetch(`${BASE_COMMENT_URL}${postId}`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  const data: {
+    comments?: Comment[];
+    message?: string;
+  } = await response.json();
+
+  if (!response.ok && data.message) {
+    throw new CustomError(data.message, response.status);
+  }
+
+  return data;
+};
+
+export const deleteCommentService = async (commentId: string) => {
+  const response = await fetch(`${BASE_COMMENT_URL}${commentId}`, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+
+  const data: {
+    message: string;
+  } = await response.json();
+
+  if (!response.ok) {
+    throw new CustomError(data.message, response.status);
+  }
+
+  return data.message;
 };
 
 export const createCommentService = async (postId: string, text: string) =>
-  request(`${baseCommentAPI}${postId}`, 'POST', text);
-
-export const getCommentsService = async (postId: string) =>
-  request(`${baseCommentAPI}${postId}`, 'GET');
+  setCommentRequest(`${BASE_COMMENT_URL}${postId}`, 'POST', text);
 
 export const editCommentService = async (text: string, commentId: string) =>
-  request(`${baseCommentAPI}${commentId}`, 'PATCH', text);
-
-export const deleteCommentService = async (commentId: string) =>
-  request(`${baseCommentAPI}${commentId}`, 'DELETE');
+  setCommentRequest(`${BASE_COMMENT_URL}${commentId}`, 'PATCH', text);

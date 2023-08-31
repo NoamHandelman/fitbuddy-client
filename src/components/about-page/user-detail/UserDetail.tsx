@@ -30,17 +30,14 @@ const UserDetail: FC<UserDetailProps> = ({
 
   const { user } = useAppContext();
 
-  const { editProfilePayload, deleteDetailPayload } = useProfileMutation();
-
-  const { editProfile, isLoading: isLoadingEditing } = editProfilePayload;
-
-  const { deleteDetail, isLoading: isLoadingDeletion } = deleteDetailPayload;
+  const { deleteDetail, editProfile, isLoadingDelete, isLoadingEdit } =
+    useProfileMutation();
 
   const isCurrentUser = user?._id === userId;
 
   const title = detail.charAt(0).toUpperCase() + detail.slice(1);
 
-  if (isLoadingEditing || isLoadingDeletion) {
+  if (isLoadingEdit || isLoadingDelete) {
     return (
       <div className="shadow-lg bg-gray-200 rounded-lg w-96 p-4">
         <section className="flex flex-col items-center">

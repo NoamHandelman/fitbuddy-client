@@ -5,13 +5,22 @@ import PostItem from './post-item/PostItem';
 import Spinner from '../ui/Spinner';
 import { useIntersection } from '@mantine/hooks';
 import usePost from '@/hooks/usePost';
-
+import useError from '@/hooks/useError';
 interface PostsListProps {
   userId?: string;
 }
 
 const PostsList: FC<PostsListProps> = ({ userId }) => {
-  const { posts, isLoading, fetchNextPage, isFetchingNextPage } = usePost();
+  const {
+    posts,
+    isLoading,
+    fetchNextPage,
+    isFetchingNextPage,
+    isError,
+    error,
+  } = usePost();
+
+  const { errorHandler } = useError();
 
   const lastPostRef = useRef<HTMLElement>(null);
 
@@ -23,6 +32,10 @@ const PostsList: FC<PostsListProps> = ({ userId }) => {
   useEffect(() => {
     if (entry?.isIntersecting) fetchNextPage();
   }, [entry, fetchNextPage]);
+
+  if (isError) {
+    errorHandler(error);
+  }
 
   if (isLoading) {
     return <Spinner />;

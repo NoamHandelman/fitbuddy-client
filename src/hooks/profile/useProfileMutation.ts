@@ -4,40 +4,41 @@ import {
   editProfileService,
 } from '@/services/profile.service';
 import useNotification from '@/hooks/useNotification';
+import useError from '../useError';
 
 const useProfileMutation = () => {
   const queryClient = useQueryClient();
-  const { errorNotify, successNotify } = useNotification();
+  const { successNotify } = useNotification();
+  const { errorHandler } = useError();
 
-  const editProfileMutation = useMutation({
+  const { mutate: editProfile, isLoading: isLoadingEdit } = useMutation({
     mutationFn: (userDetail: { detail: string; data: string }) =>
       editProfileService(userDetail.detail, userDetail.data),
     onSuccess: (data) => {
       queryClient.invalidateQueries(['profile']);
-      successNotify(data?.data.message);
+      successNotify(data.message);
     },
-    onError: (error: any) => {
-      errorNotify(error.message);
+    onError: (error) => {
+      errorHandler(error);
     },
   });
 
-  const deleteDetailMutation = useMutation({
+  const { mutate: deleteDetail, isLoading: isLoadingDelete } = useMutation({
     mutationFn: deleteDetailsService,
-    onSuccess: (data) => {
+    onSuccess: (message) => {
       queryClient.invalidateQueries(['profile']);
-      successNotify(data?.data.message);
+      successNotify(message);
+    },
+    onError: (error) => {
+      errorHandler(error);
     },
   });
 
   return {
-    editProfilePayload: {
-      editProfile: editProfileMutation.mutate,
-      isLoading: editProfileMutation.isLoading,
-    },
-    deleteDetailPayload: {
-      deleteDetail: deleteDetailMutation.mutate,
-      isLoading: deleteDetailMutation.isLoading,
-    },
+    editProfile,
+    isLoadingEdit,
+    deleteDetail,
+    isLoadingDelete,
   };
 };
 

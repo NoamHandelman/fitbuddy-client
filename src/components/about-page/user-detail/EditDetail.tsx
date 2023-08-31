@@ -1,4 +1,5 @@
 import Input from '@/components/ui/Input';
+import { Profile } from '@/types/profile';
 import { UseMutateFunction } from '@tanstack/react-query';
 import { Dispatch, FC, SetStateAction } from 'react';
 
@@ -10,10 +11,10 @@ interface EditDetailProps {
   setIsEditing: () => void;
   editProfile: UseMutateFunction<
     {
-      response: Response;
-      data: any;
+      profile?: Profile | undefined;
+      message: string;
     },
-    any,
+    unknown,
     {
       detail: string;
       data: string;

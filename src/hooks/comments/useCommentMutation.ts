@@ -6,10 +6,13 @@ import {
 } from '@/services/comment.service';
 import useNotification from '@/hooks/useNotification';
 import { useAppContext } from '@/context/app.context';
+import useError from '../useError';
 
 const useCommentMutation = () => {
   const queryClient = useQueryClient();
   const { errorNotify, successNotify } = useNotification();
+
+  const { errorHandler } = useError();
 
   const {
     setShowNewCommentContainer,
@@ -26,10 +29,12 @@ const useCommentMutation = () => {
       queryClient.invalidateQueries(['posts']);
       setShowNewCommentContainer(false);
       setCurrentCommentPostId(null);
-      successNotify(data?.data.message);
+      successNotify(data.message);
     },
-    onError: (error: any) => {
-      errorNotify(error.message);
+    onError: (error) => {
+      errorHandler(error);
+      setShowNewCommentContainer(false);
+      setCurrentCommentPostId(null);
     },
   });
 
@@ -43,22 +48,26 @@ const useCommentMutation = () => {
       setCurrentCommentPostId(null);
       setIsEditingComment(false);
       setEditedCommentId(null);
-      successNotify(data?.data.message);
+      successNotify(data.message);
     },
-    onError: (error: any) => {
-      errorNotify(error.message);
+    onError: (error) => {
+      errorHandler(error);
+      setShowNewCommentContainer(false);
+      setCurrentCommentPostId(null);
+      setIsEditingComment(false);
+      setEditedCommentId(null);
     },
   });
 
   const { mutate: deleteComment } = useMutation({
     mutationFn: deleteCommentService,
-    onSuccess: (data) => {
+    onSuccess: (message) => {
       queryClient.invalidateQueries(['comments']);
       queryClient.invalidateQueries(['posts']);
-      successNotify(data?.data.message);
+      successNotify(message);
     },
-    onError: (error: any) => {
-      errorNotify(error.message);
+    onError: (error) => {
+      errorHandler(error);
     },
   });
 
