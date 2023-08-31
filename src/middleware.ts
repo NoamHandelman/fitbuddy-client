@@ -4,6 +4,10 @@ import { NextRequest } from 'next/server';
 export default function middleware(request: NextRequest) {
   let hasToken = request.cookies.has('token');
 
+  const token = request.cookies.get('token');
+
+  console.log(token);
+
   console.log(hasToken);
 
   if (!hasToken && request.url !== '/') {
