@@ -51,24 +51,26 @@ const PostsList: FC<PostsListProps> = ({
     return <Spinner />;
   }
 
-  if (posts.length === 0) {
+  if (posts) {
+    if (posts.length === 0) {
+      return (
+        <h1 className="text-3xl font-bold text-teal-600 mt-6">
+          Noting to see here...
+        </h1>
+      );
+    }
+
     return (
-      <h1 className="text-3xl font-bold text-teal-600 mt-6">
-        Noting to see here...
-      </h1>
+      <section className="max-w-2xl mx-auto px-4 sm:px-0">
+        {posts.map((post, i) => {
+          if (i === posts.length - 1) {
+            return <PostItem key={post._id} post={post} lastPostRef={ref} />;
+          }
+          return <PostItem key={post._id} post={post} />;
+        })}
+        {isFetchingNextPage && <Spinner size="medium" />}
+      </section>
     );
   }
-
-  return (
-    <section className="max-w-2xl mx-auto px-4 sm:px-0">
-      {posts.map((post, i) => {
-        if (i === posts.length - 1) {
-          return <PostItem key={post._id} post={post} lastPostRef={ref} />;
-        }
-        return <PostItem key={post._id} post={post} />;
-      })}
-      {isFetchingNextPage && <Spinner size="medium" />}
-    </section>
-  );
 };
 export default PostsList;

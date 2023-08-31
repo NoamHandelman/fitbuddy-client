@@ -2,7 +2,7 @@ import { CustomError } from '@/lib/utils/CustomError';
 import { Method } from '@/types/method';
 import { Comment } from '@/types/post';
 
-const BASE_COMMENT_URL = 'http://localhost:8080/api/comments/';
+const BASE_COMMENT_URL = 'http://localhost:8080/api/v1/comments/';
 
 const setCommentRequest = async (url: string, method: Method, body: string) => {
   const response = await fetch(url, {
