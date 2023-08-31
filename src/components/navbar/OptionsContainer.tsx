@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import { RiArrowDownSFill } from 'react-icons/ri';
 import Link from 'next/link';
-import useAuth from '@/hooks/auth/useAuthMutation';
+import useUserMutation from '@/hooks/user/useUserMutation';
 import useOutsideClick from '@/hooks/useOutsideClick';
 
 const OptionsContainer = () => {
   const [showOptions, setShowOptions] = useState<boolean>(false);
-  const { logoutUser } = useAuth();
+  const { logoutUser } = useUserMutation();
 
   const toggleShowUserOptions = () => {
     setShowOptions((prevState) => !prevState);

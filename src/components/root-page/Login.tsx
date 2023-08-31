@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, FormEvent, ChangeEvent } from 'react';
-import useAuth from '@/hooks/auth/useAuthMutation';
+import useUserMutation from '@/hooks/user/useUserMutation';
 import { loginUserSchema, registerUserSchema } from '@/schemas/user.schema';
 import { ZodError } from 'zod';
 import useNotification from '@/hooks/useNotification';
@@ -18,7 +18,7 @@ const initialState = {
 const Login = () => {
   const [userDetails, setUserDetails] = useState(initialState);
 
-  const { loginUser, registerUser } = useAuth();
+  const { loginUser, registerUser } = useUserMutation();
 
   const { errorNotify } = useNotification();
 

@@ -3,7 +3,9 @@ import { CustomError } from '@/lib/utils/CustomError';
 
 export const BASE_PROFILE_URL = 'http://localhost:8080/api/profiles/';
 
-export const getProfilesService = async (debouncedSearchInput: string) => {
+export const getSearchedProfilesService = async (
+  debouncedSearchInput: string
+) => {
   const response = await fetch(
     `${BASE_PROFILE_URL}searchProfiles?q=${debouncedSearchInput}`,
     {

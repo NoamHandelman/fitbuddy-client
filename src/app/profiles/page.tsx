@@ -20,8 +20,9 @@ const getProfiles = async () => {
   }
 
   if (response.ok) {
-    const data = await response.json();
-    return data.profiles as Profile[];
+    const data: { profiles?: Profile[]; message?: string } =
+      await response.json();
+    return data.profiles;
   }
 };
 

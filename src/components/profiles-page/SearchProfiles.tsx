@@ -3,7 +3,7 @@
 import { FC, useState } from 'react';
 import { LiaSearchSolid } from 'react-icons/lia';
 import { Profile } from '@/types/profile';
-import { getProfilesService } from '@/services/profile.service';
+import { getSearchedProfilesService } from '@/services/profile.service';
 import ProfileItem from './ProfileItem';
 import Spinner from '../ui/Spinner';
 import { useQuery } from '@tanstack/react-query';
@@ -30,7 +30,7 @@ const SearchProfiles: FC<SearchProfilesProps> = ({ initialProfiles }) => {
     queryKey: ['search', debouncedSearchInput],
     queryFn: async () => {
       if (debouncedSearchInput) {
-        const data = await getProfilesService(debouncedSearchInput);
+        const data = await getSearchedProfilesService(debouncedSearchInput);
         return data.profiles;
       }
       return initialProfiles;

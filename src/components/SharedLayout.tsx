@@ -9,7 +9,7 @@ import { AiOutlineCamera } from 'react-icons/ai';
 import { useAppContext } from '@/context/app.context';
 import { IoCloseOutline } from 'react-icons/io5';
 import Spinner from './ui/Spinner';
-import useAuthQuery from '@/hooks/auth/useAuthQuery';
+import useUserQuery from '@/hooks/user/useUserQuery';
 import {
   deleteImageService,
   uploadImageService,
@@ -27,7 +27,7 @@ const SharedLayout: FC<SharedLayoutProps> = ({ userId }) => {
   const [showImageOperationsContainer, setShowImageOperationsContainer] =
     useState(false);
 
-  const { data: user } = useAuthQuery(userId);
+  const { data: user } = useUserQuery(userId);
 
   const { errorHandler } = useError();
 

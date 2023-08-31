@@ -21,7 +21,7 @@ import { useAppContext } from '@/context/app.context';
 import { UserResponse } from '@/types/userResponse';
 import useError from '../useError';
 
-const useAuth = () => {
+const useUserMutation = () => {
   const { successNotify } = useNotification();
 
   const router = useRouter();
@@ -110,4 +110,4 @@ const useAuth = () => {
   };
 };
 
-export default useAuth;
+export default useUserMutation;
