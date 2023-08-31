@@ -1,17 +1,10 @@
 'use client';
 
-import {
-  FC,
-  Dispatch,
-  SetStateAction,
-  MouseEvent,
-  useEffect,
-  useState,
-} from 'react';
+import { FC, Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { IoCloseOutline } from 'react-icons/io5';
 import { useAppContext } from '@/context/app.context';
 import useOutsideClick from '@/hooks/useOutsideClick';
-import usePost from '@/hooks/usePost';
+import usePost from '@/hooks/posts/usePost';
 
 interface NewPostContainerProps {
   setShowNewPostContainer: Dispatch<SetStateAction<boolean>>;
@@ -25,7 +18,7 @@ const NewPost: FC<NewPostContainerProps> = ({ setShowNewPostContainer }) => {
 
   const { createPost, editPost } = usePost();
 
-  const handleCreatePost = (e: MouseEvent<HTMLButtonElement>) => {
+  const handleCreatePost = () => {
     if (isEditingPost && editedPost.id) {
       const { id } = editedPost;
       editPost({ text, editedPostId: id });

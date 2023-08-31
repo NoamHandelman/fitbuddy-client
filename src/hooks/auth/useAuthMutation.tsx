@@ -5,7 +5,7 @@ import {
   loginUserService,
   logoutUserService,
   registerUserService,
-} from '@/services/auth.service';
+} from '@/services/user.service';
 import {
   LoginUserInput,
   RegisterUserInput,

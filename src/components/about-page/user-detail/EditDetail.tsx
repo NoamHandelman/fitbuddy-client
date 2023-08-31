@@ -23,7 +23,7 @@ interface EditDetailProps {
   >;
 }
 
-const sports = [
+const SPORTS = [
   'general',
   'aerobic',
   'bodybuilding',
@@ -56,7 +56,7 @@ const EditDetail: FC<EditDetailProps> = ({
           value={detailData}
           onChange={(e) => setDetailData(e.target.value)}
         >
-          {sports.map((sport) => (
+          {SPORTS.map((sport) => (
             <option key={sport} value={sport}>
               {sport}
             </option>

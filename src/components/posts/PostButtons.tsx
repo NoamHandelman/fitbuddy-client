@@ -3,7 +3,7 @@ import { SlLike } from 'react-icons/sl';
 import { BiCommentEdit } from 'react-icons/bi';
 import { Like } from '@/types/post';
 import { useAppContext } from '@/context/app.context';
-import usePost from '@/hooks/usePost';
+import usePost from '@/hooks/posts/usePost';
 
 interface PostButtonsProps {
   postId: string;

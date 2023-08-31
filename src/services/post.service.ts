@@ -74,6 +74,29 @@ export const getAllPostsService = async (page: number) => {
   return data.posts;
 };
 
+export const getUserPostsService = async (page: number, userId: string) => {
+  const response = await fetch(`${BASE_POST_URL}${userId}/?page=${page}`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  const data: { posts: Post[]; message?: string } = await response.json();
+
+  if (response.status === 401) {
+    throw new CustomError(
+      data.message ??
+        'You are not authorized to view this resource, please log in!',
+      401
+    );
+  }
+
+  if (!response.ok) {
+    throw new CustomError('Something went wrong ...', response.status);
+  }
+
+  return data.posts;
+};
+
 export const handleLikeService = async (postId: string) =>
   postOperationsRequest(`${BASE_POST_URL}${postId}/likes`, 'GET');
 

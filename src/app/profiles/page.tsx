@@ -28,8 +28,6 @@ const getProfiles = async () => {
 const ProfilesPage = async () => {
   const profiles = await getProfiles();
 
-  console.log(profiles);
-
   if (profiles) {
     return (
       <main className="flex flex-col justify-center items-center">

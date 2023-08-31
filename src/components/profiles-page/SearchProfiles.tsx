@@ -3,11 +3,12 @@
 import { FC, useState } from 'react';
 import { LiaSearchSolid } from 'react-icons/lia';
 import { Profile } from '@/types/profile';
-import { BASE_PROFILE_URL } from '@/services/profile.service';
+import { getProfilesService } from '@/services/profile.service';
 import ProfileItem from './ProfileItem';
 import Spinner from '../ui/Spinner';
 import { useQuery } from '@tanstack/react-query';
 import useDebounce from '@/hooks/useDebounce';
+import useError from '@/hooks/useError';
 
 interface SearchProfilesProps {
   initialProfiles: Profile[];
@@ -16,25 +17,29 @@ interface SearchProfilesProps {
 const SearchProfiles: FC<SearchProfilesProps> = ({ initialProfiles }) => {
   const [queryInput, setQueryInput] = useState('');
 
+  const { errorHandler } = useError();
+
   const debouncedSearchInput = useDebounce(queryInput, 500);
 
-  const { data: profiles, isLoading } = useQuery({
+  const {
+    data: profiles,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ['search', debouncedSearchInput],
     queryFn: async () => {
       if (debouncedSearchInput) {
-        const response = await fetch(
-          `${BASE_PROFILE_URL}searchProfiles?q=${debouncedSearchInput}`,
-          {
-            credentials: 'include',
-          }
-        );
-
-        const data = await response.json();
-        return data.profiles as Profile[];
+        const data = await getProfilesService(debouncedSearchInput);
+        return data.profiles;
       }
       return initialProfiles;
     },
   });
+
+  if (isError) {
+    errorHandler(error);
+  }
 
   return (
     <section className="flex flex-col items-center justify-center mt-4 w-full">

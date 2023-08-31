@@ -10,7 +10,7 @@ import useError from '../useError';
 
 const useCommentMutation = () => {
   const queryClient = useQueryClient();
-  const { errorNotify, successNotify } = useNotification();
+  const { successNotify } = useNotification();
 
   const { errorHandler } = useError();
 

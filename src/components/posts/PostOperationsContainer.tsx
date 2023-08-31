@@ -4,7 +4,7 @@ import { FC, useState } from 'react';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
 import { useAppContext } from '@/context/app.context';
 import useOutsideClick from '@/hooks/useOutsideClick';
-import usePost from '@/hooks/usePost';
+import usePost from '@/hooks/posts/usePost';
 
 interface PostOperationsContainerProps {
   postOwnerId: string;

@@ -9,7 +9,7 @@ import { Method } from '@/types/method';
 import { User } from '@/types/user';
 import { UserResponse } from '@/types/userResponse';
 
-const BASE_AUTH_URL = 'http://localhost:8080/api/users/';
+const BASE_USER_URL = 'http://localhost:8080/api/users/';
 
 type AuthRequestBody = RegisterUserInput | LoginUserInput | EditUserInput;
 
@@ -52,7 +52,7 @@ const unsetUserRequest = async (url: string, method: Method) => {
 };
 
 export const getUserService = async (userId: string) => {
-  const response = await fetch(`${BASE_AUTH_URL}${userId}`, {
+  const response = await fetch(`${BASE_USER_URL}${userId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ export const getUserService = async (userId: string) => {
 };
 
 export const uploadImageService = async (formData: FormData) => {
-  const response = await fetch(`${BASE_AUTH_URL}image`, {
+  const response = await fetch(`${BASE_USER_URL}image`, {
     method: 'POST',
     credentials: 'include',
     body: formData,
@@ -88,19 +88,19 @@ export const uploadImageService = async (formData: FormData) => {
 };
 
 export const loginUserService = async (user: LoginUserInput) =>
-  setUserRequest(`${BASE_AUTH_URL}login`, 'POST', user);
+  setUserRequest(`${BASE_USER_URL}login`, 'POST', user);
 
 export const registerUserService = (user: RegisterUserInput) =>
-  setUserRequest(`${BASE_AUTH_URL}register`, 'POST', user);
+  setUserRequest(`${BASE_USER_URL}register`, 'POST', user);
 
 export const editUserService = (user: EditUserInput) =>
-  setUserRequest(BASE_AUTH_URL, 'PATCH', user);
+  setUserRequest(BASE_USER_URL, 'PATCH', user);
 
 export const deleteUserService = () =>
-  unsetUserRequest(BASE_AUTH_URL, 'DELETE');
+  unsetUserRequest(BASE_USER_URL, 'DELETE');
 
 export const logoutUserService = () =>
-  unsetUserRequest(`${BASE_AUTH_URL}logout`, 'GET');
+  unsetUserRequest(`${BASE_USER_URL}logout`, 'GET');
 
 export const deleteImageService = () =>
-  unsetUserRequest(`${BASE_AUTH_URL}image`, 'DELETE');
+  unsetUserRequest(`${BASE_USER_URL}image`, 'DELETE');

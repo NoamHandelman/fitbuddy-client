@@ -1,3 +1,5 @@
+'use client';
+
 import {
   createPostService,
   deletePostService,
@@ -11,8 +13,8 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
-import useNotification from './useNotification';
-import useError from './useError';
+import useNotification from '../useNotification';
+import useError from '../useError';
 
 const usePost = () => {
   const queryClient = useQueryClient();

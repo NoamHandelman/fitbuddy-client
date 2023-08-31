@@ -1,11 +1,10 @@
 'use client';
 
-import { FC, use, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import Image from 'next/image';
 import defaultImage from '../../public/images/user-photo.png';
 import ActiveLink from './ui/ActiveLink';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { User } from '@/types/user';
 import { AiOutlineCamera } from 'react-icons/ai';
 import { useAppContext } from '@/context/app.context';
 import { IoCloseOutline } from 'react-icons/io5';
@@ -14,7 +13,7 @@ import useAuthQuery from '@/hooks/auth/useAuthQuery';
 import {
   deleteImageService,
   uploadImageService,
-} from '@/services/auth.service';
+} from '@/services/user.service';
 import useError from '@/hooks/useError';
 import { saveUserToLocalStorage } from '@/lib/utils/localStorage';
 import useNotification from '@/hooks/useNotification';

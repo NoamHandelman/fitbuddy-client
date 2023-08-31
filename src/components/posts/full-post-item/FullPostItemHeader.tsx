@@ -1,4 +1,3 @@
-import { Post } from '@/types/post';
 import Link from 'next/link';
 import { Dispatch, FC, SetStateAction } from 'react';
 import Image from 'next/image';
