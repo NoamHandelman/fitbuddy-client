@@ -91,8 +91,8 @@ export const uploadImageService = async (formData: FormData) => {
 };
 
 export const loginUserService = async (user: LoginUserInput) => {
-  setUserRequest(`${BASE_USER_URL}login`, 'POST', user);
   console.log(`${BASE_USER_URL}login`);
+  return await setUserRequest(`${BASE_USER_URL}login`, 'POST', user);
 };
 
 export const registerUserService = (user: RegisterUserInput) =>
