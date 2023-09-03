@@ -90,8 +90,10 @@ export const uploadImageService = async (formData: FormData) => {
   return data;
 };
 
-export const loginUserService = async (user: LoginUserInput) =>
+export const loginUserService = async (user: LoginUserInput) => {
   setUserRequest(`${BASE_USER_URL}login`, 'POST', user);
+  console.log(`${BASE_USER_URL}login`);
+};
 
 export const registerUserService = (user: RegisterUserInput) =>
   setUserRequest(`${BASE_USER_URL}register`, 'POST', user);
