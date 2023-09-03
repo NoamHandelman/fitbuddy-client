@@ -9,7 +9,10 @@ import { Method } from '@/types/method';
 import { User } from '@/types/user';
 import { UserResponse } from '@/types/userResponse';
 
-const BASE_USER_URL = 'https://fittbudy-server.onrender.com/api/v1/users/';
+const isProduction = process.env.NODE_ENV === 'production';
+const HOST_URL = isProduction ? process.env.HOST_URL : 'http://localhost:8080';
+
+const BASE_USER_URL = `${HOST_URL}/api/v1/users/`;
 
 type AuthRequestBody = RegisterUserInput | LoginUserInput | EditUserInput;
 

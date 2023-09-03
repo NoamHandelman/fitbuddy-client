@@ -2,8 +2,10 @@ import { CustomError } from '@/lib/utils/CustomError';
 import { Method } from '@/types/method';
 import { Comment } from '@/types/post';
 
-const BASE_COMMENT_URL =
-  'https://fittbudy-server.onrender.com/api/v1/comments/';
+const isProduction = process.env.NODE_ENV === 'production';
+const HOST_URL = isProduction ? process.env.HOST_URL : 'http://localhost:8080';
+
+const BASE_COMMENT_URL = `${HOST_URL}/api/v1/comments/`;
 
 const setCommentRequest = async (url: string, method: Method, body: string) => {
   const response = await fetch(url, {
