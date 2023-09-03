@@ -1,7 +1,8 @@
 import { Profile } from '@/types/profile';
 import { CustomError } from '@/lib/utils/CustomError';
 
-export const BASE_PROFILE_URL = 'http://localhost:8080/api/v1/profiles/';
+export const BASE_PROFILE_URL =
+  'https://fittbudy-server.onrender.com/api/v1/profiles/';
 
 export const getSearchedProfilesService = async (
   debouncedSearchInput: string
