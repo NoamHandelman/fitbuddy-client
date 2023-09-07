@@ -96,7 +96,7 @@ export const loginUserService = async (user: LoginUserInput) => {
   console.log(`${BASE_USER_URL}login`);
   // return await setUserRequest(`${BASE_USER_URL}login`, 'POST', user);
   return await setUserRequest(
-    'https://fittbudy-server.onrender.com/login',
+    'https://fittbudy-server.onrender.com/api/v1/users/login',
     'POST',
     user
   );
