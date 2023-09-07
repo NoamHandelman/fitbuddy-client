@@ -94,7 +94,12 @@ export const uploadImageService = async (formData: FormData) => {
 
 export const loginUserService = async (user: LoginUserInput) => {
   console.log(`${BASE_USER_URL}login`);
-  return await setUserRequest(`${BASE_USER_URL}login`, 'POST', user);
+  // return await setUserRequest(`${BASE_USER_URL}login`, 'POST', user);
+  return await setUserRequest(
+    'https://fittbudy-server.onrender.com/login',
+    'POST',
+    user
+  );
 };
 
 export const registerUserService = (user: RegisterUserInput) =>
