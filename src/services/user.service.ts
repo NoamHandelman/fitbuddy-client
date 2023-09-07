@@ -12,6 +12,8 @@ import { UserResponse } from '@/types/userResponse';
 const isProduction = process.env.NODE_ENV === 'production';
 const HOST_URL = isProduction ? process.env.HOST_URL : 'http://localhost:8080';
 
+console.log(process.env.HOST_URL);
+
 const BASE_USER_URL = `${HOST_URL}/api/v1/users/`;
 
 type AuthRequestBody = RegisterUserInput | LoginUserInput | EditUserInput;
