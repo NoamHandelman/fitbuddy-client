@@ -94,6 +94,9 @@ export const uploadImageService = async (formData: FormData) => {
 
 export const loginUserService = async (user: LoginUserInput) => {
   console.log(`${BASE_USER_URL}login`);
+  console.log(process.env.NODE_ENV);
+  console.log(process.env.HOST_URL);
+
   // return await setUserRequest(`${BASE_USER_URL}login`, 'POST', user);
   return await setUserRequest(
     'https://fittbudy-server.onrender.com/api/v1/users/login',
