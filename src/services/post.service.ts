@@ -57,6 +57,8 @@ export const deletePostService = async (postId: string) => {
 export const getAllPostsService = async (page: number, token: string) => {
   console.log(`${BASE_POST_URL}?page=${page}`);
 
+  console.log(process.env.HOST_URL);
+
   // const response = await fetch(`${BASE_POST_URL}?page=${page}`, {
   const response = await fetch(
     `https://fittbudy-server.onrender.com/api/v1/posts?page=${page}`,
