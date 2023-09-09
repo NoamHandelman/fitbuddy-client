@@ -26,19 +26,26 @@ export const authOptions: NextAuthOptions = {
 
         const { email, password } = credentials;
 
-        const response = await fetch(
-          'http://localhost:8080/api/v1/users/login',
-          {
-            method: 'POST',
-            body: JSON.stringify({
-              email,
-              password,
-            }),
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        );
+        const isProduction = process.env.NODE_ENV === 'production';
+
+        console.log(isProduction);
+
+        const HOST_URL = isProduction
+          ? process.env.HOST_URL
+          : 'http://localhost:8080';
+
+        const BASE_USER_URL = `${HOST_URL}/api/v1/users/`;
+
+        const response = await fetch(`${BASE_USER_URL}login`, {
+          method: 'POST',
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
         if (!response.ok) {
           console.log(response.statusText);
