@@ -7,13 +7,19 @@ const HOST_URL = isProduction ? process.env.HOST_URL : 'http://localhost:8080';
 
 const BASE_COMMENT_URL = `${HOST_URL}/api/v1/comments/`;
 
-const setCommentRequest = async (url: string, method: Method, body: string) => {
+const setCommentRequest = async (
+  url: string,
+  method: Method,
+  body: string,
+  token: string
+) => {
   const response = await fetch(url, {
     method: method,
     headers: {
       'Content-Type': 'application/json',
+      authorization: `Bearer ${token}`,
     },
-    credentials: 'include',
+    // credentials: 'include',
     body: JSON.stringify({ text: body }),
   });
 
@@ -29,10 +35,13 @@ const setCommentRequest = async (url: string, method: Method, body: string) => {
   return data;
 };
 
-export const getCommentsService = async (postId: string) => {
+export const getCommentsService = async (postId: string, token: string) => {
   const response = await fetch(`${BASE_COMMENT_URL}${postId}`, {
-    method: 'GET',
-    credentials: 'include',
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+    // method: 'GET',
+    // credentials: 'include',
   });
 
   const data: {
@@ -47,10 +56,16 @@ export const getCommentsService = async (postId: string) => {
   return data;
 };
 
-export const deleteCommentService = async (commentId: string) => {
+export const deleteCommentService = async (
+  commentId: string,
+  token: string
+) => {
   const response = await fetch(`${BASE_COMMENT_URL}${commentId}`, {
     method: 'DELETE',
-    credentials: 'include',
+    // credentials: 'include',
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
   });
 
   const data: {
@@ -64,8 +79,14 @@ export const deleteCommentService = async (commentId: string) => {
   return data.message;
 };
 
-export const createCommentService = async (postId: string, text: string) =>
-  setCommentRequest(`${BASE_COMMENT_URL}${postId}`, 'POST', text);
+export const createCommentService = async (
+  postId: string,
+  text: string,
+  token: string
+) => setCommentRequest(`${BASE_COMMENT_URL}${postId}`, 'POST', text, token);
 
-export const editCommentService = async (text: string, commentId: string) =>
-  setCommentRequest(`${BASE_COMMENT_URL}${commentId}`, 'PATCH', text);
+export const editCommentService = async (
+  text: string,
+  commentId: string,
+  token: string
+) => setCommentRequest(`${BASE_COMMENT_URL}${commentId}`, 'PATCH', text, token);

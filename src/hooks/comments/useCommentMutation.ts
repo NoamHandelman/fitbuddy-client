@@ -7,8 +7,11 @@ import {
 import useNotification from '@/hooks/useNotification';
 import { useAppContext } from '@/context/app.context';
 import useError from '../useError';
+import { useSession } from 'next-auth/react';
 
 const useCommentMutation = () => {
+  const { data: session } = useSession();
+
   const queryClient = useQueryClient();
   const { successNotify } = useNotification();
 
@@ -22,14 +25,21 @@ const useCommentMutation = () => {
   } = useAppContext();
 
   const { mutate: createComment, isLoading: isLoadingCreation } = useMutation({
-    mutationFn: (createdComment: { postId: string; text: string }) =>
-      createCommentService(createdComment.postId, createdComment.text),
+    mutationFn: async (createdComment: { postId: string; text: string }) => {
+      if (session?.accessToken) {
+        return await createCommentService(
+          createdComment.postId,
+          createdComment.text,
+          session.accessToken
+        );
+      }
+    },
     onSuccess: (data) => {
       queryClient.invalidateQueries(['comments']);
       queryClient.invalidateQueries(['posts']);
       setShowNewCommentContainer(false);
       setCurrentCommentPostId(null);
-      successNotify(data.message);
+      successNotify(data?.message ?? 'Comment successfully created!');
     },
     onError: (error) => {
       errorHandler(error);
@@ -39,8 +49,15 @@ const useCommentMutation = () => {
   });
 
   const { mutate: editComment, isLoading: isLoadingEdit } = useMutation({
-    mutationFn: (editedComment: { text: string; commentId: string }) =>
-      editCommentService(editedComment.text, editedComment.commentId),
+    mutationFn: async (editedComment: { text: string; commentId: string }) => {
+      if (session?.accessToken) {
+        return await editCommentService(
+          editedComment.text,
+          editedComment.commentId,
+          session.accessToken
+        );
+      }
+    },
     onSuccess: (data) => {
       queryClient.invalidateQueries(['comments']);
       queryClient.invalidateQueries(['posts']);
@@ -48,7 +65,7 @@ const useCommentMutation = () => {
       setCurrentCommentPostId(null);
       setIsEditingComment(false);
       setEditedCommentId(null);
-      successNotify(data.message);
+      successNotify(data?.message ?? 'Comment successfully edited!');
     },
     onError: (error) => {
       errorHandler(error);
@@ -60,11 +77,15 @@ const useCommentMutation = () => {
   });
 
   const { mutate: deleteComment } = useMutation({
-    mutationFn: deleteCommentService,
+    mutationFn: async (commentId: string) => {
+      if (session?.accessToken) {
+        return await deleteCommentService(commentId, session?.accessToken);
+      }
+    },
     onSuccess: (message) => {
       queryClient.invalidateQueries(['comments']);
       queryClient.invalidateQueries(['posts']);
-      successNotify(message);
+      successNotify(message ?? 'Comment successfully deleted!');
     },
     onError: (error) => {
       errorHandler(error);

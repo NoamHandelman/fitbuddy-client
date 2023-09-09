@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { BiArrowFromLeft } from 'react-icons/bi';
 import Link from 'next/link';
 import { useAppContext } from '@/context/app.context';
+import { useSession } from 'next-auth/react';
 
 interface ProfileItemProps {
   userId: string;
@@ -20,9 +21,10 @@ const ProfileItem: FC<ProfileItemProps> = ({
   imageUrl,
   favoriteSport,
 }) => {
-  const { user } = useAppContext();
+  // const { user } = useAppContext();
+  const { data: session } = useSession();
 
-  if (user?._id !== userId) {
+  if (session?.user._id !== userId) {
     return (
       <Link
         className="flex flex-col m-2 w-120 shadow-md p-6 bg-white rounded-lg cursor-pointer"

@@ -15,8 +15,12 @@ import {
 } from '@tanstack/react-query';
 import useNotification from '../useNotification';
 import useError from '../useError';
+import { CustomError } from '@/lib/utils/CustomError';
+import { useSession } from 'next-auth/react';
 
 const usePost = () => {
+  const { data: session } = useSession();
+
   const queryClient = useQueryClient();
 
   const { successNotify } = useNotification();
@@ -27,8 +31,13 @@ const usePost = () => {
     useInfiniteQuery(
       ['posts'],
       async ({ pageParam = 1 }) => {
-        const data = await getAllPostsService(pageParam.toString());
-        return data;
+        if (session?.accessToken) {
+          const data = await getAllPostsService(
+            pageParam.toString(),
+            session?.accessToken
+          );
+          return data;
+        }
       },
       {
         getNextPageParam: (lastPage, allPages) => {

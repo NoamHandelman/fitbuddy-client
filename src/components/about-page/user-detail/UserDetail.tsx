@@ -6,6 +6,7 @@ import { useAppContext } from '@/context/app.context';
 import useProfileMutation from '@/hooks/profile/useProfileMutation';
 import DetailOperations from './DetailOperations';
 import EditDetail from './EditDetail';
+import { useSession } from 'next-auth/react';
 
 interface UserDetailProps {
   detail: string;
@@ -28,12 +29,14 @@ const UserDetail: FC<UserDetailProps> = ({
 }) => {
   const [detailData, setDetailData] = useState(data ?? '');
 
-  const { user } = useAppContext();
+  // const { user } = useAppContext();
+
+  const { data: session } = useSession();
 
   const { deleteDetail, editProfile, isLoadingDelete, isLoadingEdit } =
     useProfileMutation();
 
-  const isCurrentUser = user?._id === userId;
+  const isCurrentUser = session?.user._id === userId;
 
   const title = detail.charAt(0).toUpperCase() + detail.slice(1);
 

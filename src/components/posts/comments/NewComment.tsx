@@ -6,6 +6,7 @@ import defaultImage from '../../../../public/images/user-photo.png';
 import { Comment } from '@/types/post';
 import { useAppContext } from '@/context/app.context';
 import useCommentMutation from '@/hooks/comments/useCommentMutation';
+import { useSession } from 'next-auth/react';
 const Spinner = dynamic(() => import('@/components/ui/Spinner'));
 
 interface NewCommentProps {
@@ -16,11 +17,13 @@ interface NewCommentProps {
 const NewComment: FC<NewCommentProps> = ({ postId, comments }) => {
   const [commentInput, setCommentInput] = useState('');
 
+  const { data: session } = useSession();
+
   const { createComment, isLoadingCreation, editComment, isLoadingEdit } =
     useCommentMutation();
 
   const {
-    user,
+    // user,
     currentCommentPostId,
     showNewCommentContainer,
     isEditingComment,
@@ -56,8 +59,8 @@ const NewComment: FC<NewCommentProps> = ({ postId, comments }) => {
         {showNewCommentContainer && postId === currentCommentPostId && (
           <>
             <Image
-              src={user?.imageUrl || defaultImage}
-              alt={user?.username || 'User image'}
+              src={session?.user.imageUrl || defaultImage}
+              alt={session?.user.username || 'User image'}
               width={24}
               height={24}
               className="w-6 h-6 rounded-full mr-4"

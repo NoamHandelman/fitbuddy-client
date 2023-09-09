@@ -3,6 +3,7 @@ import { PiDotsThreeBold } from 'react-icons/pi';
 import useOutsideClick from '@/hooks/useOutsideClick';
 import { useAppContext } from '@/context/app.context';
 import useCommentMutation from '@/hooks/comments/useCommentMutation';
+import { useSession } from 'next-auth/react';
 
 interface CommentOperationsProps {
   commentOwnerId: string;
@@ -18,10 +19,12 @@ const CommentOperations: FC<CommentOperationsProps> = ({
   const [showCommentOperations, setShowCommentOperations] =
     useState<boolean>(false);
 
+  const { data: session } = useSession();
+
   const { deleteComment } = useCommentMutation();
 
   const {
-    user,
+    // user,
     setCurrentCommentPostId,
     setShowNewCommentContainer,
     setIsEditingComment,
@@ -43,7 +46,7 @@ const CommentOperations: FC<CommentOperationsProps> = ({
   return (
     <>
       {' '}
-      {user?._id === commentOwnerId && (
+      {session?.user._id === commentOwnerId && (
         <section className="relative" ref={ref}>
           <PiDotsThreeBold
             className="cursor-pointer text-lg hover:bg-gray-200 rounded-full"

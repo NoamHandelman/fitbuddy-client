@@ -4,6 +4,7 @@ import { BiCommentEdit } from 'react-icons/bi';
 import { Like } from '@/types/post';
 import { useAppContext } from '@/context/app.context';
 import usePost from '@/hooks/posts/usePost';
+import { useSession } from 'next-auth/react';
 
 interface PostButtonsProps {
   postId: string;
@@ -13,8 +14,10 @@ interface PostButtonsProps {
 const PostButtons: FC<PostButtonsProps> = ({ postId, likes }) => {
   const [isUserPressedLike, setIsUserPressedLike] = useState(false);
 
+  const { data: session } = useSession();
+
   const {
-    user,
+    // user,
     showNewCommentContainer,
     setShowNewCommentContainer,
     setCurrentCommentPostId,
@@ -25,9 +28,11 @@ const PostButtons: FC<PostButtonsProps> = ({ postId, likes }) => {
   const { handleLike } = usePost();
 
   useEffect(() => {
-    const userHasLiked = likes.some((like) => like.user._id === user?._id);
+    const userHasLiked = likes.some(
+      (like) => like.user._id === session?.user._id
+    );
     setIsUserPressedLike(userHasLiked);
-  }, [likes, user]);
+  }, [likes, session?.user._id]);
 
   const handleToggleNewCommentContainer = () => {
     if (!showNewCommentContainer) {

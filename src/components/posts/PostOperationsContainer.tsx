@@ -5,6 +5,7 @@ import { BiDotsVerticalRounded } from 'react-icons/bi';
 import { useAppContext } from '@/context/app.context';
 import useOutsideClick from '@/hooks/useOutsideClick';
 import usePost from '@/hooks/posts/usePost';
+import { useSession } from 'next-auth/react';
 
 interface PostOperationsContainerProps {
   postOwnerId: string;
@@ -20,8 +21,14 @@ const PostOperationsContainer: FC<PostOperationsContainerProps> = ({
   const [showOperationsContainer, setShowOperationsContainer] =
     useState<boolean>(false);
 
-  const { user, setIsEditingPost, setShowNewPostContainer, setEditedPost } =
-    useAppContext();
+  const { data: session } = useSession();
+
+  const {
+    // user
+    setIsEditingPost,
+    setShowNewPostContainer,
+    setEditedPost,
+  } = useAppContext();
 
   const { deletePost } = usePost();
 
@@ -37,7 +44,7 @@ const PostOperationsContainer: FC<PostOperationsContainerProps> = ({
   return (
     <>
       {' '}
-      {user?._id === postOwnerId && (
+      {session?.user._id === postOwnerId && (
         <section className="relative" ref={ref}>
           <BiDotsVerticalRounded
             className="cursor-pointer text-2xl hover:bg-gray-200 rounded-full"

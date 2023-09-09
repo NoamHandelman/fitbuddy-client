@@ -2,7 +2,7 @@
 
 import { ChangeEvent, FormEvent, useState } from 'react';
 import EditSection from '@/components/my-account-page/EditSection';
-import useAuth from '@/hooks/user/useUserMutation';
+import useUserMutation from '@/hooks/user/useUserMutation';
 import { editUserSchema } from '@/schemas/user.schema';
 import { ZodError } from 'zod';
 import useNotification from '@/hooks/useNotification';
@@ -22,7 +22,8 @@ const AccountDetails = () => {
     password: false,
   });
 
-  const { editUser, isLoadingEdit, deleteUser, isLoadingDeletion } = useAuth();
+  const { editUser, isLoadingEdit, deleteUser, isLoadingDeletion } =
+    useUserMutation();
 
   const { errorNotify } = useNotification();
 

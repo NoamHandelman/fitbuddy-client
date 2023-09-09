@@ -17,6 +17,7 @@ import {
 import useError from '@/hooks/useError';
 import { saveUserToLocalStorage } from '@/lib/utils/localStorage';
 import useNotification from '@/hooks/useNotification';
+import { useSession } from 'next-auth/react';
 
 interface SharedLayoutProps {
   userId: string;
@@ -33,7 +34,9 @@ const SharedLayout: FC<SharedLayoutProps> = ({ userId }) => {
 
   const { successNotify } = useNotification();
 
-  const { user: currentUser, setUser } = useAppContext();
+  // const { user: currentUser, setUser } = useAppContext();
+
+  const { data: session } = useSession();
 
   const queryClient = useQueryClient();
 
@@ -50,13 +53,13 @@ const SharedLayout: FC<SharedLayoutProps> = ({ userId }) => {
       queryClient.invalidateQueries(['posts']);
       if (data) {
         successNotify(data?.message);
-        setUser((prevUser) => {
-          if (!prevUser) return null;
-          return {
-            ...prevUser,
-            imageUrl: data.imageUrl,
-          };
-        });
+        // setUser((prevUser) => {
+        //   if (!prevUser) return null;
+        //   return {
+        //     ...prevUser,
+        //     imageUrl: data.imageUrl,
+        //   };
+        // });
         if (user) {
           saveUserToLocalStorage('user', {
             ...user,
@@ -81,13 +84,13 @@ const SharedLayout: FC<SharedLayoutProps> = ({ userId }) => {
       queryClient.invalidateQueries(['user', userId]);
       queryClient.invalidateQueries(['posts']);
       successNotify(message);
-      setUser((prevUser) => {
-        if (!prevUser) return null;
-        return {
-          ...prevUser,
-          imageUrl: undefined,
-        };
-      });
+      // setUser((prevUser) => {
+      //   if (!prevUser) return null;
+      //   return {
+      //     ...prevUser,
+      //     imageUrl: undefined,
+      //   };
+      // });
       if (user) {
         saveUserToLocalStorage('user', {
           ...user,
@@ -114,7 +117,7 @@ const SharedLayout: FC<SharedLayoutProps> = ({ userId }) => {
     <>
       <section className="bg-white flex flex-col items-center justify-center py-4 border-b border-gray-400">
         <div className="relative">
-          {currentUser?._id === userId && (
+          {session?.user._id === userId && (
             <>
               <div
                 className="absolute bottom-0 right-0 p-2 rounded-full bg-gray-300 mr-8 cursor-pointer"

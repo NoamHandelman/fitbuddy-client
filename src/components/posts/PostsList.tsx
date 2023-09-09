@@ -16,7 +16,7 @@ interface PostsListProps {
   isLoading: boolean;
   fetchNextPage: (
     options?: FetchNextPageOptions | undefined
-  ) => Promise<InfiniteQueryObserverResult<Post[], unknown>>;
+  ) => Promise<InfiniteQueryObserverResult<Post[] | undefined, unknown>>;
   isFetchingNextPage: boolean;
   isError: boolean;
   error: unknown;

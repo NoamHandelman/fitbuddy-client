@@ -6,6 +6,7 @@ import AddNewPost from '@/components/posts/new-post/AddNewPost';
 import { useAppContext } from '@/context/app.context';
 import useGetUserPosts from '@/hooks/posts/useGetUserPosts';
 import { Post } from '@/types/post';
+import { useSession } from 'next-auth/react';
 
 interface ProfilePostsPageProps {
   params: {
@@ -14,7 +15,10 @@ interface ProfilePostsPageProps {
 }
 
 const ProfilePostsPage: FC<ProfilePostsPageProps> = ({ params }) => {
-  const { user } = useAppContext();
+  // const { user } = useAppContext();
+
+  const { data: session } = useSession();
+
   const { data, isLoading, fetchNextPage, isFetchingNextPage, isError, error } =
     useGetUserPosts(params.userId);
 
@@ -22,7 +26,7 @@ const ProfilePostsPage: FC<ProfilePostsPageProps> = ({ params }) => {
 
   return (
     <div className="flex flex-col justify-center items-center">
-      {user?._id === params.userId && <AddNewPost />}
+      {session?.user._id === params.userId && <AddNewPost />}
       <PostsList
         posts={posts}
         isLoading={isLoading}

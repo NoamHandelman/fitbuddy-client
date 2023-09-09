@@ -7,12 +7,17 @@ const HOST_URL = isProduction ? process.env.HOST_URL : 'http://localhost:8080';
 export const BASE_PROFILE_URL = `${HOST_URL}/api/v1/profiles/`;
 
 export const getSearchedProfilesService = async (
-  debouncedSearchInput: string
+  debouncedSearchInput: string,
+  token: string
 ) => {
   const response = await fetch(
     `${BASE_PROFILE_URL}searchProfiles?q=${debouncedSearchInput}`,
+
     {
-      credentials: 'include',
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+      // credentials: 'include',
     }
   );
 

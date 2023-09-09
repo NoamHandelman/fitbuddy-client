@@ -3,26 +3,29 @@ import OptionsContainer from './OptionsContainer';
 import Image from 'next/image';
 import defaultImage from '../../../public/images/user-photo.png';
 import { useAppContext } from '@/context/app.context';
+import { useSession } from 'next-auth/react';
 
 const UserSection = () => {
-  const { user } = useAppContext();
+  // const { user } = useAppContext();
+
+  const { data: session } = useSession();
 
   return (
     <div className="flex items-center">
       <OptionsContainer />
       <Link
-        href={`/profiles/${user?._id}/posts`}
+        href={`/profiles/${session?.user._id}/posts`}
         className="text-lg font-bold text-gray-700 ml-6 hover:underline"
       >
-        {user?.username}
+        {session?.user.username}
       </Link>
-      <Link href={`/profiles/${user?._id}/posts`}>
+      <Link href={`/profiles/${session?.user._id}/posts`}>
         <Image
           className="w-10 h-10 rounded-full ml-8 cursor-pointer"
           width={40}
           height={40}
-          src={user?.imageUrl || defaultImage}
-          alt={user?.username || 'User image'}
+          src={session?.user.imageUrl || defaultImage}
+          alt={session?.user.username || 'User image'}
         />
       </Link>
     </div>

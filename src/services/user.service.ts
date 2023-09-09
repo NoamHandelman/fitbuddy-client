@@ -56,13 +56,11 @@ const unsetUserRequest = async (url: string, method: Method) => {
   return data.message;
 };
 
-export const getUserService = async (userId: string) => {
+export const getUserService = async (userId: string, token: string) => {
   const response = await fetch(`${BASE_USER_URL}${userId}`, {
-    method: 'GET',
     headers: {
-      'Content-Type': 'application/json',
+      authorization: `Bearer ${token}`,
     },
-    credentials: 'include',
   });
 
   const data: { user?: User; message?: string } = await response.json();
@@ -92,18 +90,8 @@ export const uploadImageService = async (formData: FormData) => {
   return data;
 };
 
-export const loginUserService = async (user: LoginUserInput) => {
-  console.log(`${BASE_USER_URL}login`);
-  console.log(process.env.NODE_ENV);
-  console.log(process.env.HOST_URL);
-
-  // return await setUserRequest(`${BASE_USER_URL}login`, 'POST', user);
-  return await setUserRequest(
-    'https://fittbudy-server.onrender.com/api/v1/users/login',
-    'POST',
-    user
-  );
-};
+export const loginUserService = (user: LoginUserInput) =>
+  setUserRequest(`${BASE_USER_URL}login`, 'POST', user);
 
 export const registerUserService = (user: RegisterUserInput) =>
   setUserRequest(`${BASE_USER_URL}register`, 'POST', user);

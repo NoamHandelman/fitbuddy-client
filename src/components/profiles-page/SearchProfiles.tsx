@@ -9,6 +9,7 @@ import Spinner from '../ui/Spinner';
 import { useQuery } from '@tanstack/react-query';
 import useDebounce from '@/hooks/useDebounce';
 import useError from '@/hooks/useError';
+import { useSession } from 'next-auth/react';
 
 interface SearchProfilesProps {
   initialProfiles: Profile[];
@@ -16,6 +17,8 @@ interface SearchProfilesProps {
 
 const SearchProfiles: FC<SearchProfilesProps> = ({ initialProfiles }) => {
   const [queryInput, setQueryInput] = useState('');
+
+  const { data: session } = useSession();
 
   const { errorHandler } = useError();
 
@@ -29,8 +32,11 @@ const SearchProfiles: FC<SearchProfilesProps> = ({ initialProfiles }) => {
   } = useQuery({
     queryKey: ['search', debouncedSearchInput],
     queryFn: async () => {
-      if (debouncedSearchInput) {
-        const data = await getSearchedProfilesService(debouncedSearchInput);
+      if (debouncedSearchInput && session?.accessToken) {
+        const data = await getSearchedProfilesService(
+          debouncedSearchInput,
+          session?.accessToken
+        );
         return data.profiles;
       }
       return initialProfiles;

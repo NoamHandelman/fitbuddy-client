@@ -2,9 +2,13 @@
 
 import PostsList from '@/components/posts/PostsList';
 import AddNewPost from '@/components/posts/new-post/AddNewPost';
+import Spinner from '@/components/ui/Spinner';
 import usePost from '@/hooks/posts/usePost';
+import { useSession } from 'next-auth/react';
 
 const HomePage = () => {
+  const { data: session } = useSession();
+
   const {
     posts,
     isLoading,
@@ -13,6 +17,11 @@ const HomePage = () => {
     isError,
     error,
   } = usePost();
+
+  if (!session?.accessToken) {
+    return <Spinner />;
+  }
+
   return (
     <main className="flex flex-col items-center justify-center min-h-screen">
       <AddNewPost />

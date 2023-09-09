@@ -3,15 +3,18 @@ import { Profile } from '@/types/profile';
 import { BASE_PROFILE_URL } from '@/services/profile.service';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/nextAuth';
 
-const getProfiles = async () => {
+const getProfiles = async (token: string) => {
   const cookieStore = cookies();
   const tokenObj = cookieStore.get('token');
   const response = await fetch(`${BASE_PROFILE_URL}`, {
     cache: 'no-cache',
-    credentials: 'include',
+    // credentials: 'include',
     headers: {
-      Cookie: `token=${tokenObj?.value};`,
+      // Cookie: `token=${tokenObj?.value};`,
+      authorization: `Bearer ${token}`,
     },
   });
 
@@ -27,7 +30,13 @@ const getProfiles = async () => {
 };
 
 const ProfilesPage = async () => {
-  const profiles = await getProfiles();
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    redirect('/');
+  }
+
+  const profiles = await getProfiles(session?.accessToken);
 
   if (profiles) {
     return (

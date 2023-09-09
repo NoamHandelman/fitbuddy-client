@@ -54,10 +54,11 @@ export const deletePostService = async (postId: string) => {
   return data.message;
 };
 
-export const getAllPostsService = async (page: number) => {
+export const getAllPostsService = async (page: number, token: string) => {
   const response = await fetch(`${BASE_POST_URL}?page=${page}`, {
-    method: 'GET',
-    credentials: 'include',
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
   });
 
   const data: { posts: Post[]; message?: string } = await response.json();
@@ -77,10 +78,16 @@ export const getAllPostsService = async (page: number) => {
   return data.posts;
 };
 
-export const getUserPostsService = async (page: number, userId: string) => {
+export const getUserPostsService = async (
+  page: number,
+  userId: string,
+  token: string
+) => {
   const response = await fetch(`${BASE_POST_URL}${userId}/?page=${page}`, {
-    method: 'GET',
-    credentials: 'include',
+    // credentials: 'include',
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
   });
 
   const data: { posts: Post[]; message?: string } = await response.json();
