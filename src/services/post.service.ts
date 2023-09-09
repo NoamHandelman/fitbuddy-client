@@ -55,11 +55,17 @@ export const deletePostService = async (postId: string) => {
 };
 
 export const getAllPostsService = async (page: number, token: string) => {
-  const response = await fetch(`${BASE_POST_URL}?page=${page}`, {
-    headers: {
-      authorization: `Bearer ${token}`,
-    },
-  });
+  console.log(`${BASE_POST_URL}?page=${page}`);
+
+  // const response = await fetch(`${BASE_POST_URL}?page=${page}`, {
+  const response = await fetch(
+    `https://fittbudy-server.onrender.com/api/v1/posts?page=${page}`,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
   const data: { posts: Post[]; message?: string } = await response.json();
 
