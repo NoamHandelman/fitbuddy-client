@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { AiOutlineSend } from 'react-icons/ai';
 import defaultImage from '../../../../public/images/user-photo.png';
 import { Comment } from '@/types/post';
-import { useAppContext } from '@/context/app.context';
+import { useAppContext } from '@/lib/context/appContext';
 import useCommentMutation from '@/hooks/comments/useCommentMutation';
 import { useSession } from 'next-auth/react';
 const Spinner = dynamic(() => import('@/components/ui/Spinner'));
@@ -23,7 +23,6 @@ const NewComment: FC<NewCommentProps> = ({ postId, comments }) => {
     useCommentMutation();
 
   const {
-    // user,
     currentCommentPostId,
     showNewCommentContainer,
     isEditingComment,

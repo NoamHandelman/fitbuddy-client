@@ -1,7 +1,5 @@
 'use client';
 
-import { User } from '@/types/user';
-import { getUserFromLocalStorage } from '@/lib/utils/localStorage';
 import {
   Dispatch,
   SetStateAction,
@@ -9,12 +7,9 @@ import {
   ReactNode,
   useContext,
   useState,
-  useEffect,
 } from 'react';
 
 interface AppContextData {
-  user: User | null;
-  setUser: Dispatch<SetStateAction<User | null>>;
   isEditingPost: boolean;
   setIsEditingPost: Dispatch<SetStateAction<boolean>>;
   showNewPostContainer: boolean;
@@ -36,7 +31,6 @@ interface AppContextData {
 const AppContext = createContext<AppContextData | undefined>(undefined);
 
 export const AppContextProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
   const [isEditingPost, setIsEditingPost] = useState(false);
   const [showNewPostContainer, setShowNewPostContainer] = useState(false);
   const [editedPost, setEditedPost] = useState<{
@@ -50,19 +44,9 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const [isEditingComment, setIsEditingComment] = useState(false);
   const [editedCommentId, setEditedCommentId] = useState<string | null>(null);
 
-  useEffect(() => {
-    const user = getUserFromLocalStorage('user');
-
-    if (user) {
-      setUser(user);
-    }
-  }, [setUser]);
-
   return (
     <AppContext.Provider
       value={{
-        user,
-        setUser,
         isEditingPost,
         setIsEditingPost,
         showNewPostContainer,

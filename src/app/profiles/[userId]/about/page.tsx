@@ -15,9 +15,9 @@ interface ProfileAboutPageProps {
 const ProfileAboutPage: FC<ProfileAboutPageProps> = ({ params }) => {
   const { data, isLoading, isError, error } = useProfileQuery(params.userId);
 
-  const details = data?.profile;
-
   const { errorHandler } = useError();
+
+  const details = data?.profile;
 
   if (isError) {
     errorHandler(error);

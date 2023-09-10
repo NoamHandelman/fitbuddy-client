@@ -3,13 +3,11 @@
 import { useState } from 'react';
 import { RiArrowDownSFill } from 'react-icons/ri';
 import Link from 'next/link';
-import useUserMutation from '@/hooks/user/useUserMutation';
 import useOutsideClick from '@/hooks/useOutsideClick';
 import { signOut } from 'next-auth/react';
 
 const OptionsContainer = () => {
   const [showOptions, setShowOptions] = useState<boolean>(false);
-  // const { logoutUser } = useUserMutation();
 
   const toggleShowUserOptions = () => {
     setShowOptions((prevState) => !prevState);
@@ -36,7 +34,6 @@ const OptionsContainer = () => {
             type="button"
             className="block w-full text-center px-4 py-2 font-medium  hover:bg-gray-300 rounded-b-md"
             onClick={() => {
-              // logoutUser();
               signOut({ callbackUrl: '/', redirect: true });
               toggleShowUserOptions();
             }}

@@ -2,7 +2,7 @@
 
 import { FC, Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { IoCloseOutline } from 'react-icons/io5';
-import { useAppContext } from '@/context/app.context';
+import { useAppContext } from '@/lib/context/appContext';
 import useOutsideClick from '@/hooks/useOutsideClick';
 import usePost from '@/hooks/posts/usePost';
 

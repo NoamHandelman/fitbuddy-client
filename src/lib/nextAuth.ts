@@ -1,11 +1,13 @@
+import { baseUserUrl } from '@/services/user.service';
 import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { CustomError } from './utils/CustomError';
 
 export const authOptions: NextAuthOptions = {
   pages: {
     signIn: '/',
   },
-  secret: process.env.NEXTAUTH_URL,
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -26,17 +28,7 @@ export const authOptions: NextAuthOptions = {
 
         const { email, password } = credentials;
 
-        const isProduction = process.env.NODE_ENV === 'production';
-
-        console.log(isProduction);
-
-        const HOST_URL = isProduction
-          ? process.env.HOST_URL
-          : 'http://localhost:8080';
-
-        const BASE_USER_URL = `${HOST_URL}/api/v1/users/`;
-
-        const response = await fetch(`${BASE_USER_URL}login`, {
+        const response = await fetch(`${baseUserUrl}login`, {
           method: 'POST',
           body: JSON.stringify({
             email,
@@ -47,33 +39,22 @@ export const authOptions: NextAuthOptions = {
           },
         });
 
-        if (!response.ok) {
-          console.log(response.statusText);
-          return null;
-        }
-
-        // const data: {
-        //   user?: {
-        //     _id: string;
-        //     username: string;
-        //     email: string;
-        //     imageUrl: string;
-        //   };
-        //   accessToken?: string;
-        //   message: string;
-        // } = await response.json();
-
-        // return data.user;
         const user = await response.json();
-        console.log('user from the login call - ', user);
+
+        if (!response.ok) {
+          throw new Error(user.message);
+        }
 
         return user;
       },
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
-      console.log({ token, user });
+    async jwt({ token, user, trigger, session }) {
+      if (trigger === 'update') {
+        return { ...session };
+      }
+
       if (user) {
         return {
           ...token,

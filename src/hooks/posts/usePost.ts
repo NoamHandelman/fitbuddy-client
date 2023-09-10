@@ -15,7 +15,6 @@ import {
 } from '@tanstack/react-query';
 import useNotification from '../useNotification';
 import useError from '../useError';
-import { CustomError } from '@/lib/utils/CustomError';
 import { useSession } from 'next-auth/react';
 
 const usePost = () => {
@@ -52,10 +51,16 @@ const usePost = () => {
     );
 
   const { mutate: createPost } = useMutation({
-    mutationFn: createPostService,
+    mutationFn: async (text: string) => {
+      if (session?.accessToken) {
+        return await createPostService(text, session?.accessToken);
+      }
+    },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['posts'] });
-      successNotify(data?.data.message);
+      if (data) {
+        queryClient.invalidateQueries({ queryKey: ['posts'] });
+        successNotify(data?.data.message);
+      }
     },
     onError: (error) => {
       errorHandler(error);
@@ -63,11 +68,20 @@ const usePost = () => {
   });
 
   const { mutate: editPost } = useMutation({
-    mutationFn: (editedPost: { text: string; editedPostId: string }) =>
-      editPostService(editedPost.text, editedPost.editedPostId),
+    mutationFn: async (editedPost: { text: string; editedPostId: string }) => {
+      if (session?.accessToken) {
+        return await editPostService(
+          editedPost.text,
+          editedPost.editedPostId,
+          session.accessToken
+        );
+      }
+    },
     onSuccess: (data) => {
-      queryClient.invalidateQueries(['posts']);
-      successNotify(data?.data.message);
+      if (data) {
+        queryClient.invalidateQueries(['posts']);
+        successNotify(data?.data.message);
+      }
     },
     onError: (error) => {
       errorHandler(error);
@@ -75,7 +89,11 @@ const usePost = () => {
   });
 
   const { mutate: handleLike } = useMutation({
-    mutationFn: handleLikeService,
+    mutationFn: async (postId: string) => {
+      if (session?.accessToken) {
+        return await handleLikeService(postId, session.accessToken);
+      }
+    },
     onSuccess: () => {
       queryClient.invalidateQueries(['posts']);
     },
@@ -85,10 +103,16 @@ const usePost = () => {
   });
 
   const { mutate: deletePost } = useMutation({
-    mutationFn: deletePostService,
+    mutationFn: async (postId: string) => {
+      if (session?.accessToken) {
+        return await deletePostService(postId, session.accessToken);
+      }
+    },
     onSuccess: (message) => {
-      queryClient.invalidateQueries(['posts']);
-      successNotify(message);
+      if (message) {
+        queryClient.invalidateQueries(['posts']);
+        successNotify(message);
+      }
     },
     onError: (error) => {
       errorHandler(error);

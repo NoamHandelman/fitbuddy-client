@@ -7,28 +7,38 @@ import {
 
 import { Method } from '@/types/method';
 import { User } from '@/types/user';
-import { UserResponse } from '@/types/userResponse';
+import { UserResponse } from '@/types/user';
 
 const isProduction = process.env.NODE_ENV === 'production';
-const HOST_URL = isProduction ? process.env.HOST_URL : 'http://localhost:8080';
+const apiHostUrl = isProduction
+  ? process.env.NEXT_PUBLIC_API_HOST_URL
+  : 'http://localhost:8080';
 
-const BASE_USER_URL = `${HOST_URL}/api/v1/users/`;
+export const baseUserUrl = `${apiHostUrl}/api/v1/users/`;
 
-type AuthRequestBody = RegisterUserInput | LoginUserInput | EditUserInput;
+type UserRequestBody = RegisterUserInput | LoginUserInput | EditUserInput;
 
 const setUserRequest = async (
   url: string,
   method: Method,
-  user: AuthRequestBody
+  user: UserRequestBody,
+  token?: string
 ) => {
-  const response = await fetch(url, {
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+  };
+
+  if (token) {
+    headers['authorization'] = `Bearer ${token}`;
+  }
+
+  const options: RequestInit = {
     method: method,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
+    headers: headers,
     body: JSON.stringify(user),
-  });
+  };
+
+  const response = await fetch(url, options);
 
   const data: UserResponse = await response.json();
 
@@ -39,10 +49,12 @@ const setUserRequest = async (
   return data;
 };
 
-const unsetUserRequest = async (url: string, method: Method) => {
+const unsetUserRequest = async (url: string, method: Method, token: string) => {
   const response = await fetch(url, {
     method: method,
-    credentials: 'include',
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
   });
 
   const data: { message: string } = await response.json();
@@ -55,7 +67,7 @@ const unsetUserRequest = async (url: string, method: Method) => {
 };
 
 export const getUserService = async (userId: string, token: string) => {
-  const response = await fetch(`${BASE_USER_URL}${userId}`, {
+  const response = await fetch(`${baseUserUrl}${userId}`, {
     headers: {
       authorization: `Bearer ${token}`,
     },
@@ -72,10 +84,12 @@ export const getUserService = async (userId: string, token: string) => {
   return data.user;
 };
 
-export const uploadImageService = async (formData: FormData) => {
-  const response = await fetch(`${BASE_USER_URL}image`, {
+export const uploadImageService = async (formData: FormData, token: string) => {
+  const response = await fetch(`${baseUserUrl}image`, {
     method: 'POST',
-    credentials: 'include',
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
     body: formData,
   });
 
@@ -88,20 +102,14 @@ export const uploadImageService = async (formData: FormData) => {
   return data;
 };
 
-export const loginUserService = (user: LoginUserInput) =>
-  setUserRequest(`${BASE_USER_URL}login`, 'POST', user);
-
 export const registerUserService = (user: RegisterUserInput) =>
-  setUserRequest(`${BASE_USER_URL}register`, 'POST', user);
+  setUserRequest(`${baseUserUrl}register`, 'POST', user);
 
-export const editUserService = (user: EditUserInput) =>
-  setUserRequest(BASE_USER_URL, 'PATCH', user);
+export const editUserService = (user: EditUserInput, token: string) =>
+  setUserRequest(baseUserUrl, 'PATCH', user, token);
 
-export const deleteUserService = () =>
-  unsetUserRequest(BASE_USER_URL, 'DELETE');
+export const deleteUserService = (token: string) =>
+  unsetUserRequest(baseUserUrl, 'DELETE', token);
 
-export const logoutUserService = () =>
-  unsetUserRequest(`${BASE_USER_URL}logout`, 'GET');
-
-export const deleteImageService = () =>
-  unsetUserRequest(`${BASE_USER_URL}image`, 'DELETE');
+export const deleteImageService = (token: string) =>
+  unsetUserRequest(`${baseUserUrl}image`, 'DELETE', token);

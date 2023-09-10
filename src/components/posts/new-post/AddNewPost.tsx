@@ -4,16 +4,12 @@ import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import defaultImage from '../../../../public/images/user-photo.png';
 const NewPost = dynamic(() => import('@/components/posts/new-post/NewPost'));
-import { useAppContext } from '@/context/app.context';
+import { useAppContext } from '@/lib/context/appContext';
 import { useSession } from 'next-auth/react';
 
 const AddNewPost = () => {
   const { data: session } = useSession();
-  const {
-    // user
-    showNewPostContainer,
-    setShowNewPostContainer,
-  } = useAppContext();
+  const { showNewPostContainer, setShowNewPostContainer } = useAppContext();
 
   return (
     <>

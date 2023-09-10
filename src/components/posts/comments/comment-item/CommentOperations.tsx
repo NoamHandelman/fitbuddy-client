@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import { PiDotsThreeBold } from 'react-icons/pi';
 import useOutsideClick from '@/hooks/useOutsideClick';
-import { useAppContext } from '@/context/app.context';
+import { useAppContext } from '@/lib/context/appContext';
 import useCommentMutation from '@/hooks/comments/useCommentMutation';
 import { useSession } from 'next-auth/react';
 
@@ -24,7 +24,6 @@ const CommentOperations: FC<CommentOperationsProps> = ({
   const { deleteComment } = useCommentMutation();
 
   const {
-    // user,
     setCurrentCommentPostId,
     setShowNewCommentContainer,
     setIsEditingComment,

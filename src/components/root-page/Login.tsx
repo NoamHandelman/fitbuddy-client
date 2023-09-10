@@ -1,16 +1,13 @@
 'use client';
 
-import { useState, FormEvent, ChangeEvent, FC } from 'react';
+import { useState, FormEvent, ChangeEvent, FC, use } from 'react';
 import useUserMutation from '@/hooks/user/useUserMutation';
 import { loginUserSchema, registerUserSchema } from '@/schemas/user.schema';
 import { ZodError } from 'zod';
 import useNotification from '@/hooks/useNotification';
 import Input from '../ui/Input';
 import { signIn } from 'next-auth/react';
-
-interface LoginProps {
-  callbackUrl?: string;
-}
+import { useRouter } from 'next/navigation';
 
 const initialState = {
   username: '',
@@ -20,12 +17,14 @@ const initialState = {
   isRegisteredUser: true,
 };
 
-const Login: FC<LoginProps> = ({ callbackUrl }) => {
+const Login = () => {
   const [userDetails, setUserDetails] = useState(initialState);
 
-  const { loginUser, registerUser } = useUserMutation();
+  const { registerUser } = useUserMutation();
 
   const { errorNotify } = useNotification();
+
+  const router = useRouter();
 
   const { isRegisteredUser, username, email, password, passwordConfirmation } =
     userDetails;
@@ -56,13 +55,17 @@ const Login: FC<LoginProps> = ({ callbackUrl }) => {
 
       if (isRegisteredUser) {
         loginUserSchema.parse({ email, password });
-        // loginUser({ email, password });
-        await signIn('credentials', {
+        const res = await signIn('credentials', {
           email,
           password,
-          redirect: true,
-          callbackUrl: callbackUrl ?? '/home',
+          redirect: false,
         });
+
+        if (res?.error) {
+          return errorNotify(res.error);
+        }
+
+        router.push('/home');
       } else {
         registerUserSchema.parse({
           username,

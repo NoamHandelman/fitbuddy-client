@@ -2,7 +2,6 @@
 
 import { FC, useState } from 'react';
 import Spinner from '@/components/ui/Spinner';
-import { useAppContext } from '@/context/app.context';
 import useProfileMutation from '@/hooks/profile/useProfileMutation';
 import DetailOperations from './DetailOperations';
 import EditDetail from './EditDetail';
@@ -28,8 +27,6 @@ const UserDetail: FC<UserDetailProps> = ({
   data,
 }) => {
   const [detailData, setDetailData] = useState(data ?? '');
-
-  // const { user } = useAppContext();
 
   const { data: session } = useSession();
 

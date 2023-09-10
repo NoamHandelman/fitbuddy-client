@@ -10,10 +10,11 @@ interface EditDetailProps {
   type: string;
   setIsEditing: () => void;
   editProfile: UseMutateFunction<
-    {
-      profile?: Profile | undefined;
-      message: string;
-    },
+    | {
+        profile?: Profile | undefined;
+        message: string;
+      }
+    | undefined,
     unknown,
     {
       detail: string;

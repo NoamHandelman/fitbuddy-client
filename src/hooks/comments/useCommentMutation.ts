@@ -5,7 +5,7 @@ import {
   editCommentService,
 } from '@/services/comment.service';
 import useNotification from '@/hooks/useNotification';
-import { useAppContext } from '@/context/app.context';
+import { useAppContext } from '@/lib/context/appContext';
 import useError from '../useError';
 import { useSession } from 'next-auth/react';
 
@@ -13,6 +13,7 @@ const useCommentMutation = () => {
   const { data: session } = useSession();
 
   const queryClient = useQueryClient();
+
   const { successNotify } = useNotification();
 
   const { errorHandler } = useError();
@@ -35,11 +36,13 @@ const useCommentMutation = () => {
       }
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries(['comments']);
-      queryClient.invalidateQueries(['posts']);
-      setShowNewCommentContainer(false);
-      setCurrentCommentPostId(null);
-      successNotify(data?.message ?? 'Comment successfully created!');
+      if (data) {
+        queryClient.invalidateQueries(['comments']);
+        queryClient.invalidateQueries(['posts']);
+        setShowNewCommentContainer(false);
+        setCurrentCommentPostId(null);
+        successNotify(data?.message);
+      }
     },
     onError: (error) => {
       errorHandler(error);
@@ -59,13 +62,15 @@ const useCommentMutation = () => {
       }
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries(['comments']);
-      queryClient.invalidateQueries(['posts']);
-      setShowNewCommentContainer(false);
-      setCurrentCommentPostId(null);
-      setIsEditingComment(false);
-      setEditedCommentId(null);
-      successNotify(data?.message ?? 'Comment successfully edited!');
+      if (data) {
+        queryClient.invalidateQueries(['comments']);
+        queryClient.invalidateQueries(['posts']);
+        setShowNewCommentContainer(false);
+        setCurrentCommentPostId(null);
+        setIsEditingComment(false);
+        setEditedCommentId(null);
+        successNotify(data?.message);
+      }
     },
     onError: (error) => {
       errorHandler(error);
@@ -83,9 +88,11 @@ const useCommentMutation = () => {
       }
     },
     onSuccess: (message) => {
-      queryClient.invalidateQueries(['comments']);
-      queryClient.invalidateQueries(['posts']);
-      successNotify(message ?? 'Comment successfully deleted!');
+      if (message) {
+        queryClient.invalidateQueries(['comments']);
+        queryClient.invalidateQueries(['posts']);
+        successNotify(message ?? 'Comment successfully deleted!');
+      }
     },
     onError: (error) => {
       errorHandler(error);

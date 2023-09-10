@@ -3,3 +3,8 @@ export type User = {
   username: string;
   imageUrl?: string;
 };
+
+export type UserResponse = {
+  user?: User;
+  message: string;
+};

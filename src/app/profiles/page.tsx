@@ -1,19 +1,14 @@
 import SearchProfiles from '@/components/profiles-page/SearchProfiles';
 import { Profile } from '@/types/profile';
-import { BASE_PROFILE_URL } from '@/services/profile.service';
-import { cookies } from 'next/headers';
+import { baseProfileUrl } from '@/services/profile.service';
 import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/nextAuth';
 
 const getProfiles = async (token: string) => {
-  const cookieStore = cookies();
-  const tokenObj = cookieStore.get('token');
-  const response = await fetch(`${BASE_PROFILE_URL}`, {
+  const response = await fetch(`${baseProfileUrl}`, {
     cache: 'no-cache',
-    // credentials: 'include',
     headers: {
-      // Cookie: `token=${tokenObj?.value};`,
       authorization: `Bearer ${token}`,
     },
   });

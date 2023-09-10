@@ -2,66 +2,32 @@ import { useMutation } from '@tanstack/react-query';
 import {
   deleteUserService,
   editUserService,
-  loginUserService,
-  logoutUserService,
   registerUserService,
 } from '@/services/user.service';
-import {
-  LoginUserInput,
-  RegisterUserInput,
-  EditUserInput,
-} from '@/schemas/user.schema';
-import {
-  saveUserToLocalStorage,
-  removeUserFromLocalStorage,
-} from '../../lib/utils/localStorage';
-import { useRouter } from 'next/navigation';
+import { RegisterUserInput, EditUserInput } from '@/schemas/user.schema';
 import useNotification from '../useNotification';
-import { useAppContext } from '@/context/app.context';
-import { UserResponse } from '@/types/userResponse';
 import useError from '../useError';
+import { signIn, signOut, useSession } from 'next-auth/react';
 
 const useUserMutation = () => {
+  const { data: session, update } = useSession();
+
   const { successNotify } = useNotification();
-
-  const router = useRouter();
-
-  const { setUser } = useAppContext();
 
   const { errorHandler } = useError();
 
-  const handleSetUserOperation = (
-    userResponse: UserResponse,
-    route?: string
-  ) => {
-    if (userResponse.user) {
-      successNotify(userResponse.message);
-      saveUserToLocalStorage('user', userResponse.user);
-      setUser(userResponse.user);
-      if (route) router.push(route);
-    }
-  };
-
-  const handleUnsetUserOperations = () => {
-    removeUserFromLocalStorage('user');
-    setUser(null);
-    router.push('/');
-  };
-
-  const { mutate: loginUser } = useMutation({
-    mutationFn: (user: LoginUserInput) => loginUserService(user),
-    onSuccess: (userResponse) => {
-      handleSetUserOperation(userResponse, '/home');
-    },
-    onError: (error) => {
-      errorHandler(error);
-    },
-  });
-
   const { mutate: registerUser } = useMutation({
     mutationFn: (user: RegisterUserInput) => registerUserService(user),
-    onSuccess: (userResponse) => {
-      handleSetUserOperation(userResponse, '/home');
+    onSuccess: (userResponse, variables) => {
+      if (userResponse) {
+        signIn('credentials', {
+          email: variables.email,
+          password: variables.password,
+          redirect: true,
+          callbackUrl: '/home',
+        });
+        successNotify(userResponse.message);
+      }
     },
     onError: (error) => {
       errorHandler(error);
@@ -69,9 +35,24 @@ const useUserMutation = () => {
   });
 
   const { mutate: editUser, isLoading: isLoadingEdit } = useMutation({
-    mutationFn: (user: EditUserInput) => editUserService(user),
-    onSuccess: (userResponse) => {
-      handleSetUserOperation(userResponse);
+    mutationFn: async (user: EditUserInput) => {
+      if (session?.accessToken) {
+        return await editUserService(user, session.accessToken);
+      }
+    },
+    onSuccess: async (userResponse, variables) => {
+      if (userResponse) {
+        await update({
+          ...session,
+          user: {
+            ...session?.user,
+            ...(variables.email && { email: variables.email }),
+            ...(variables.username && { username: variables.username }),
+            ...(variables.password && { password: variables.password }),
+          },
+        });
+        successNotify(userResponse.message);
+      }
     },
     onError: (error) => {
       errorHandler(error);
@@ -79,20 +60,16 @@ const useUserMutation = () => {
   });
 
   const { mutate: deleteUser, isLoading: isLoadingDeletion } = useMutation({
-    mutationFn: deleteUserService,
+    mutationFn: async () => {
+      if (session?.accessToken) {
+        return await deleteUserService(session.accessToken);
+      }
+    },
     onSuccess: (message) => {
-      successNotify(message);
-      handleUnsetUserOperations();
-    },
-    onError: (error) => {
-      errorHandler(error);
-    },
-  });
-
-  const { mutate: logoutUser } = useMutation({
-    mutationFn: logoutUserService,
-    onSuccess: () => {
-      handleUnsetUserOperations();
+      if (message) {
+        signOut({ callbackUrl: '/', redirect: true });
+        successNotify(message);
+      }
     },
     onError: (error) => {
       errorHandler(error);
@@ -100,13 +77,11 @@ const useUserMutation = () => {
   });
 
   return {
-    loginUser,
     registerUser,
     editUser,
     isLoadingEdit,
     deleteUser,
     isLoadingDeletion,
-    logoutUser,
   };
 };
 

@@ -2,20 +2,18 @@
 
 import { FC, useEffect, useState } from 'react';
 import Image from 'next/image';
-import defaultImage from '../../public/images/user-photo.png';
-import ActiveLink from './ui/ActiveLink';
+import defaultImage from '../../../public/images/user-photo.png';
+import ActiveLink from '../ui/ActiveLink';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AiOutlineCamera } from 'react-icons/ai';
-import { useAppContext } from '@/context/app.context';
 import { IoCloseOutline } from 'react-icons/io5';
-import Spinner from './ui/Spinner';
+import Spinner from '../ui/Spinner';
 import useUserQuery from '@/hooks/user/useUserQuery';
 import {
   deleteImageService,
   uploadImageService,
 } from '@/services/user.service';
 import useError from '@/hooks/useError';
-import { saveUserToLocalStorage } from '@/lib/utils/localStorage';
 import useNotification from '@/hooks/useNotification';
 import { useSession } from 'next-auth/react';
 
@@ -34,38 +32,29 @@ const SharedLayout: FC<SharedLayoutProps> = ({ userId }) => {
 
   const { successNotify } = useNotification();
 
-  // const { user: currentUser, setUser } = useAppContext();
-
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
 
   const queryClient = useQueryClient();
 
   const { mutate: uploadImage, isLoading: isLoadingUpload } = useMutation({
     mutationFn: async () => {
-      if (!profileImage) return;
+      if (!profileImage || !session?.accessToken) return;
       const formData = new FormData();
       formData.append('image', profileImage);
-      const data = await uploadImageService(formData);
-      return data;
+      return await uploadImageService(formData, session.accessToken);
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       queryClient.invalidateQueries(['user', userId]);
       queryClient.invalidateQueries(['posts']);
       if (data) {
         successNotify(data?.message);
-        // setUser((prevUser) => {
-        //   if (!prevUser) return null;
-        //   return {
-        //     ...prevUser,
-        //     imageUrl: data.imageUrl,
-        //   };
-        // });
-        if (user) {
-          saveUserToLocalStorage('user', {
-            ...user,
+        update({
+          ...session,
+          user: {
+            ...session?.user,
             imageUrl: data.imageUrl,
-          });
-        }
+          },
+        });
       }
 
       setProfileImage(undefined);
@@ -79,24 +68,25 @@ const SharedLayout: FC<SharedLayoutProps> = ({ userId }) => {
   });
 
   const { mutate: deleteImage, isLoading: isLoadingDeletion } = useMutation({
-    mutationFn: deleteImageService,
-    onSuccess: (message) => {
+    mutationFn: async () => {
+      if (session?.accessToken) {
+        return await deleteImageService(session.accessToken);
+      }
+    },
+    onSuccess: async (message) => {
       queryClient.invalidateQueries(['user', userId]);
       queryClient.invalidateQueries(['posts']);
-      successNotify(message);
-      // setUser((prevUser) => {
-      //   if (!prevUser) return null;
-      //   return {
-      //     ...prevUser,
-      //     imageUrl: undefined,
-      //   };
-      // });
-      if (user) {
-        saveUserToLocalStorage('user', {
-          ...user,
-          imageUrl: undefined,
-        });
+      if (message) {
+        successNotify(message);
       }
+
+      await update({
+        ...session,
+        user: {
+          ...session?.user,
+          imageUrl: undefined,
+        },
+      });
 
       setShowImageOperationsContainer(false);
     },

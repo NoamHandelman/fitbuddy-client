@@ -1,4 +1,4 @@
-import { AppContextProvider } from '@/context/app.context';
+import { AppContextProvider } from '@/lib/context/appContext';
 import LayoutNav from './layout-nav';
 import ReactQueryProviders from '@/lib/providers/reactQueryProviders';
 import NextAuthProvider from '@/lib/providers/nextAuthProvider';

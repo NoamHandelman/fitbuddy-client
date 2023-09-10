@@ -5,7 +5,6 @@ import defaultImage from '../../../public/images/user-photo.png';
 import Image from 'next/image';
 import { BiArrowFromLeft } from 'react-icons/bi';
 import Link from 'next/link';
-import { useAppContext } from '@/context/app.context';
 import { useSession } from 'next-auth/react';
 
 interface ProfileItemProps {
@@ -21,7 +20,6 @@ const ProfileItem: FC<ProfileItemProps> = ({
   imageUrl,
   favoriteSport,
 }) => {
-  // const { user } = useAppContext();
   const { data: session } = useSession();
 
   if (session?.user._id !== userId) {

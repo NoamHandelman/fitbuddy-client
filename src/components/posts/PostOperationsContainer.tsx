@@ -2,7 +2,7 @@
 
 import { FC, useState } from 'react';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
-import { useAppContext } from '@/context/app.context';
+import { useAppContext } from '@/lib/context/appContext';
 import useOutsideClick from '@/hooks/useOutsideClick';
 import usePost from '@/hooks/posts/usePost';
 import { useSession } from 'next-auth/react';
@@ -23,12 +23,8 @@ const PostOperationsContainer: FC<PostOperationsContainerProps> = ({
 
   const { data: session } = useSession();
 
-  const {
-    // user
-    setIsEditingPost,
-    setShowNewPostContainer,
-    setEditedPost,
-  } = useAppContext();
+  const { setIsEditingPost, setShowNewPostContainer, setEditedPost } =
+    useAppContext();
 
   const { deletePost } = usePost();
 

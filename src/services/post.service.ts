@@ -3,9 +3,11 @@ import { Method } from '@/types/method';
 import { Post } from '@/types/post';
 
 const isProduction = process.env.NODE_ENV === 'production';
-const HOST_URL = isProduction ? process.env.HOST_URL : 'http://localhost:8080';
+const apiHostUrl = isProduction
+  ? process.env.NEXT_PUBLIC_API_HOST_URL
+  : 'http://localhost:8080';
 
-const BASE_POST_URL = `${HOST_URL}/api/v1/posts/`;
+const basePostUrl = `${apiHostUrl}/api/v1/posts/`;
 
 type PostResponse = {
   post: Post;
@@ -15,14 +17,15 @@ type PostResponse = {
 const postOperationsRequest = async (
   url: string,
   method: Method,
+  token: string,
   body?: string
 ) => {
   const options: RequestInit = {
     method: method,
     headers: {
       'Content-Type': 'application/json',
+      authorization: `Bearer ${token}`,
     },
-    credentials: 'include',
   };
 
   if (body) {
@@ -39,10 +42,12 @@ const postOperationsRequest = async (
   return { data };
 };
 
-export const deletePostService = async (postId: string) => {
-  const response = await fetch(`${BASE_POST_URL}${postId}`, {
+export const deletePostService = async (postId: string, token: string) => {
+  const response = await fetch(`${basePostUrl}${postId}`, {
     method: 'DELETE',
-    credentials: 'include',
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
   });
 
   const data: { message: string } = await response.json();
@@ -55,44 +60,7 @@ export const deletePostService = async (postId: string) => {
 };
 
 export const getAllPostsService = async (page: number, token: string) => {
-  console.log(`${BASE_POST_URL}?page=${page}`);
-
-  console.log(process.env.HOST_URL);
-
-  // const response = await fetch(`${BASE_POST_URL}?page=${page}`, {
-  const response = await fetch(
-    `https://fittbudy-server.onrender.com/api/v1/posts?page=${page}`,
-    {
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  const data: { posts: Post[]; message?: string } = await response.json();
-
-  if (response.status === 401) {
-    throw new CustomError(
-      data.message ??
-        'You are not authorized to view this resource, please log in!',
-      401
-    );
-  }
-
-  if (!response.ok) {
-    throw new CustomError('Something went wrong ...', response.status);
-  }
-
-  return data.posts;
-};
-
-export const getUserPostsService = async (
-  page: number,
-  userId: string,
-  token: string
-) => {
-  const response = await fetch(`${BASE_POST_URL}${userId}/?page=${page}`, {
-    // credentials: 'include',
+  const response = await fetch(`${basePostUrl}?page=${page}`, {
     headers: {
       authorization: `Bearer ${token}`,
     },
@@ -115,11 +83,42 @@ export const getUserPostsService = async (
   return data.posts;
 };
 
-export const handleLikeService = async (postId: string) =>
-  postOperationsRequest(`${BASE_POST_URL}${postId}/likes`, 'GET');
+export const getUserPostsService = async (
+  page: string,
+  userId: string,
+  token: string
+) => {
+  const response = await fetch(`${basePostUrl}${userId}/?page=${page}`, {
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  });
 
-export const createPostService = async (text: string) =>
-  postOperationsRequest(BASE_POST_URL, 'POST', text);
+  const data: { posts: Post[]; message?: string } = await response.json();
 
-export const editPostService = async (text: string, postId: string) =>
-  postOperationsRequest(`${BASE_POST_URL}${postId}`, 'PATCH', text);
+  if (response.status === 401) {
+    throw new CustomError(
+      data.message ??
+        'You are not authorized to view this resource, please log in!',
+      401
+    );
+  }
+
+  if (!response.ok) {
+    throw new CustomError('Something went wrong ...', response.status);
+  }
+
+  return data.posts;
+};
+
+export const handleLikeService = async (postId: string, token: string) =>
+  postOperationsRequest(`${basePostUrl}${postId}/likes`, 'GET', token);
+
+export const createPostService = async (text: string, token: string) =>
+  postOperationsRequest(basePostUrl, 'POST', token, text);
+
+export const editPostService = async (
+  text: string,
+  postId: string,
+  token: string
+) => postOperationsRequest(`${basePostUrl}${postId}`, 'PATCH', token, text);

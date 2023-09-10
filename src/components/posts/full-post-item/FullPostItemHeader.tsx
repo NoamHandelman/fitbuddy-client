@@ -5,7 +5,7 @@ import defaultImage from '@/../../public/images/user-photo.png';
 import { IoCloseOutline } from 'react-icons/io5';
 import PostDate from '../PostDate';
 import PostOperationsContainer from '../PostOperationsContainer';
-import { useAppContext } from '@/context/app.context';
+import { useAppContext } from '@/lib/context/appContext';
 import { User } from '@/types/user';
 
 interface FullPostItemHeaderProps {

@@ -2,12 +2,9 @@ import Link from 'next/link';
 import OptionsContainer from './OptionsContainer';
 import Image from 'next/image';
 import defaultImage from '../../../public/images/user-photo.png';
-import { useAppContext } from '@/context/app.context';
 import { useSession } from 'next-auth/react';
 
 const UserSection = () => {
-  // const { user } = useAppContext();
-
   const { data: session } = useSession();
 
   return (

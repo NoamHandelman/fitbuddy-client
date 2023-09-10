@@ -1,23 +1,24 @@
 import { CustomError } from '@/lib/utils/CustomError';
 import useNotification from './useNotification';
 import { useRouter } from 'next/navigation';
-import { removeUserFromLocalStorage } from '@/lib/utils/localStorage';
 import { useQueryClient } from '@tanstack/react-query';
+import { signOut } from 'next-auth/react';
 
 const useError = () => {
   const { errorNotify } = useNotification();
-  const router = useRouter();
   const queryClient = useQueryClient();
 
   const errorHandler = (error: unknown) => {
     if (error instanceof CustomError) {
-      errorNotify(error.message);
       if (error.status === 401) {
-        removeUserFromLocalStorage('user');
-        router.push('/');
+        setTimeout(() => {
+          signOut({ callbackUrl: '/', redirect: true });
+        }, 2000);
         queryClient.removeQueries();
+        errorNotify(error.message);
         return;
       }
+      errorNotify(error.message);
     } else {
       errorNotify('Something went wrong, please try again');
     }

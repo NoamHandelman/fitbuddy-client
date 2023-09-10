@@ -3,9 +3,11 @@ import { Method } from '@/types/method';
 import { Comment } from '@/types/post';
 
 const isProduction = process.env.NODE_ENV === 'production';
-const HOST_URL = isProduction ? process.env.HOST_URL : 'http://localhost:8080';
+const apiHostUrl = isProduction
+  ? process.env.NEXT_PUBLIC_API_HOST_URL
+  : 'http://localhost:8080';
 
-const BASE_COMMENT_URL = `${HOST_URL}/api/v1/comments/`;
+const baseCommentUrl = `${apiHostUrl}/api/v1/comments/`;
 
 const setCommentRequest = async (
   url: string,
@@ -19,7 +21,6 @@ const setCommentRequest = async (
       'Content-Type': 'application/json',
       authorization: `Bearer ${token}`,
     },
-    // credentials: 'include',
     body: JSON.stringify({ text: body }),
   });
 
@@ -36,12 +37,10 @@ const setCommentRequest = async (
 };
 
 export const getCommentsService = async (postId: string, token: string) => {
-  const response = await fetch(`${BASE_COMMENT_URL}${postId}`, {
+  const response = await fetch(`${baseCommentUrl}${postId}`, {
     headers: {
       authorization: `Bearer ${token}`,
     },
-    // method: 'GET',
-    // credentials: 'include',
   });
 
   const data: {
@@ -60,9 +59,8 @@ export const deleteCommentService = async (
   commentId: string,
   token: string
 ) => {
-  const response = await fetch(`${BASE_COMMENT_URL}${commentId}`, {
+  const response = await fetch(`${baseCommentUrl}${commentId}`, {
     method: 'DELETE',
-    // credentials: 'include',
     headers: {
       authorization: `Bearer ${token}`,
     },
@@ -83,10 +81,10 @@ export const createCommentService = async (
   postId: string,
   text: string,
   token: string
-) => setCommentRequest(`${BASE_COMMENT_URL}${postId}`, 'POST', text, token);
+) => setCommentRequest(`${baseCommentUrl}${postId}`, 'POST', text, token);
 
 export const editCommentService = async (
   text: string,
   commentId: string,
   token: string
-) => setCommentRequest(`${BASE_COMMENT_URL}${commentId}`, 'PATCH', text, token);
+) => setCommentRequest(`${baseCommentUrl}${commentId}`, 'PATCH', text, token);

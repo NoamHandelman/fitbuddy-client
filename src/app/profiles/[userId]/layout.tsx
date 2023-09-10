@@ -1,5 +1,5 @@
 import { ReactNode, isValidElement } from 'react';
-import SharedLayout from '@/components/SharedLayout';
+import SharedLayout from '@/components/shared/SharedLayout';
 
 export default function ProfilePageLayout({
   children,

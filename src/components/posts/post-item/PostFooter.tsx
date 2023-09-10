@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 import { Post } from '@/types/post';
 import PostButtons from '../PostButtons';
 import NewComment from '@/components/posts/comments/NewComment';
-import { useAppContext } from '@/context/app.context';
+import { useAppContext } from '@/lib/context/appContext';
 import CommentItem from '../comments/comment-item/CommentItem';
 const FullPostItem = dynamic(
   () => import('@/components/posts/full-post-item/FullPostItem')
