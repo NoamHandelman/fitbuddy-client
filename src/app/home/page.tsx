@@ -15,7 +15,7 @@ const HomePage = () => {
   } = usePost();
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen">
+    <main className="flex flex-col items-center justify-center ">
       <AddNewPost />
       <PostsList
         posts={posts}

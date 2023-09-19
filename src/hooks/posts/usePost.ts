@@ -9,6 +9,7 @@ import {
 } from '@/services/post.service';
 import { Post } from '@/types/post';
 import {
+  InfiniteData,
   useInfiniteQuery,
   useMutation,
   useQueryClient,
@@ -56,14 +57,57 @@ const usePost = () => {
         return await createPostService(text, session?.accessToken);
       }
     },
-    onSuccess: (data) => {
-      if (data) {
-        queryClient.invalidateQueries({ queryKey: ['posts'] });
-        successNotify(data?.data.message);
-      }
+    onMutate: async (newPost) => {
+      await queryClient.cancelQueries({ queryKey: ['posts'] });
+
+      const previousPosts = queryClient.getQueryData(['posts']);
+
+      type CustomData = {
+        pages: Post[][];
+        pageParams?: any[] | undefined;
+      };
+
+      queryClient.setQueryData(['posts'], (oldData: CustomData | undefined) => {
+        const oldPosts = oldData?.pages || [];
+
+        return {
+          ...oldData,
+          pages: [
+            ...oldPosts,
+            [
+              {
+                _id: Math.floor(Math.random() * 1000000).toString(),
+                user: {
+                  _id: session?.user._id || '',
+                  username: session?.user.username || '',
+                  imageUrl: session?.user.imageUrl || '',
+                },
+                comments: [],
+                createdAt: new Date().toISOString(),
+                likes: [],
+                text: newPost,
+              },
+            ],
+          ],
+        };
+      });
+
+      successNotify('Post created successfully');
+
+      return { previousPosts };
     },
-    onError: (error) => {
+    // onSuccess: (data) => {
+    //   if (data) {
+    //     queryClient.invalidateQueries({ queryKey: ['posts'] });
+    //     successNotify(data?.data.message);
+    //   }
+    // },
+    onError: (error, newPost, context) => {
+      queryClient.setQueryData(['posts'], context?.previousPosts);
       errorHandler(error);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] });
     },
   });
 

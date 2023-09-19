@@ -7,7 +7,7 @@ export type Post = {
   likes: Like[];
   comments: Comment[];
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
 };
 
 export type Comment = {
