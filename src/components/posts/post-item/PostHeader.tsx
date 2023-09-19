@@ -10,7 +10,7 @@ import PostDate from '../PostDate';
 interface PostHeaderProps {
   username: string;
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
   postOwnerId: string;
   postId: string;
   text: string;

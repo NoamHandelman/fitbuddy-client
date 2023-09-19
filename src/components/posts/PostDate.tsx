@@ -3,7 +3,7 @@ import { formatPostDates } from '@/lib/utils/dateFormatters';
 
 interface PostDateProps {
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
 }
 
 const PostDate: FC<PostDateProps> = ({ createdAt, updatedAt }) => {

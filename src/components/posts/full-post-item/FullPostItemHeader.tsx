@@ -11,7 +11,7 @@ import { User } from '@/types/user';
 interface FullPostItemHeaderProps {
   user: User;
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
   postId: string;
   text: string;
   setShowFullPost: Dispatch<SetStateAction<boolean>>;
