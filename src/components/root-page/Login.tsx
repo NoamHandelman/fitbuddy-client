@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, FormEvent, ChangeEvent, useEffect } from 'react';
+import { useState, FormEvent, ChangeEvent } from 'react';
 import useUserMutation from '@/hooks/user/useUserMutation';
 import { loginUserSchema, registerUserSchema } from '@/schemas/user.schema';
 import { ZodError } from 'zod';
 import useNotification from '@/hooks/useNotification';
 import Input from '../ui/Input';
-import { signIn, useSession } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Spinner from '../ui/Spinner';
 
@@ -21,15 +21,9 @@ const initialState = {
 const Login = () => {
   const [userDetails, setUserDetails] = useState(initialState);
 
-  const [isClicked, setIsClicked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { status } = useSession();
-
-  useEffect(() => {
-    console.log(isClicked, status);
-  }, [isClicked, status]);
-
-  const { registerUser } = useUserMutation();
+  const { registerUser, isLoadingRegistration } = useUserMutation();
 
   const { errorNotify } = useNotification();
 
@@ -52,6 +46,7 @@ const Login = () => {
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    setIsLoading(true);
     try {
       e.preventDefault();
       const {
@@ -84,8 +79,6 @@ const Login = () => {
         });
         registerUser({ username, email, password, passwordConfirmation });
       }
-
-      setUserDetails(initialState);
     } catch (error: unknown) {
       if (error instanceof ZodError) {
         errorNotify(
@@ -96,7 +89,8 @@ const Login = () => {
         errorNotify('Something went wrong, please try again later!');
       }
     } finally {
-      setIsClicked(false);
+      setIsLoading(false);
+      setUserDetails(initialState);
     }
   };
 
@@ -145,22 +139,22 @@ const Login = () => {
             autoFocus={false}
           />
         )}
-        <button
-          onClick={() => setIsClicked(true)}
-          type="submit"
-          className={` ${
-            isFormValid && !isClicked
-              ? 'bg-blue-500 hover:bg-blue-700'
-              : 'bg-gray-400  opacity-50 cursor-not-allowed'
-          } w-full  text-white font-bold py-2 px-4 rounded`}
-          disabled={!isFormValid}
-        >
-          {isClicked && !(status === 'authenticated') ? (
-            <Spinner size="small" />
-          ) : (
-            "Let's Go!"
-          )}
-        </button>
+        {isLoading || isLoadingRegistration ? (
+          <Spinner size="medium" />
+        ) : (
+          <button
+            type="submit"
+            className={` ${
+              isFormValid
+                ? 'bg-blue-500 hover:bg-blue-700'
+                : 'bg-gray-400  opacity-50 cursor-not-allowed'
+            } w-full  text-white font-bold py-2 px-4 rounded`}
+            disabled={!isFormValid}
+          >
+            {"Let's Go!"}
+          </button>
+        )}
+
         <p className="text-center">
           {userDetails.isRegisteredUser
             ? 'Not a buddy yet? '

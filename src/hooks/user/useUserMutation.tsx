@@ -16,23 +16,24 @@ const useUserMutation = () => {
 
   const { errorHandler } = useError();
 
-  const { mutate: registerUser } = useMutation({
-    mutationFn: (user: RegisterUserInput) => registerUserService(user),
-    onSuccess: (userResponse, variables) => {
-      if (userResponse) {
-        signIn('credentials', {
-          email: variables.email,
-          password: variables.password,
-          redirect: true,
-          callbackUrl: '/home',
-        });
-        successNotify(userResponse.message);
-      }
-    },
-    onError: (error) => {
-      errorHandler(error);
-    },
-  });
+  const { mutate: registerUser, isLoading: isLoadingRegistration } =
+    useMutation({
+      mutationFn: (user: RegisterUserInput) => registerUserService(user),
+      onSuccess: (userResponse, variables) => {
+        if (userResponse) {
+          signIn('credentials', {
+            email: variables.email,
+            password: variables.password,
+            redirect: true,
+            callbackUrl: '/home',
+          });
+          successNotify(userResponse.message);
+        }
+      },
+      onError: (error) => {
+        errorHandler(error);
+      },
+    });
 
   const { mutate: editUser, isLoading: isLoadingEdit } = useMutation({
     mutationFn: async (user: EditUserInput) => {
@@ -78,6 +79,7 @@ const useUserMutation = () => {
 
   return {
     registerUser,
+    isLoadingRegistration,
     editUser,
     isLoadingEdit,
     deleteUser,
