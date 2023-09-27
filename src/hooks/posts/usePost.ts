@@ -7,7 +7,7 @@ import {
   getAllPostsService,
   handleLikeService,
 } from '@/services/post.service';
-import { Post } from '@/types/post';
+import { Post } from '@/lib/types/post';
 import {
   useInfiniteQuery,
   useMutation,

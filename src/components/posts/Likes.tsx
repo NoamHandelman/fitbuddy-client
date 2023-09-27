@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import Image from 'next/image';
 import defaultImage from '@/../../public/images/user-photo.png';
-import { Like } from '@/types/post';
+import { Like } from '@/lib/types/post';
 
 interface LikesProps {
   likes: Like[];

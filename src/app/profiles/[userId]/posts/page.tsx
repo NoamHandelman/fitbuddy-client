@@ -4,7 +4,7 @@ import { FC } from 'react';
 import PostsList from '@/components/posts/PostsList';
 import AddNewPost from '@/components/posts/new-post/AddNewPost';
 import useGetUserPosts from '@/hooks/posts/useGetUserPosts';
-import { Post } from '@/types/post';
+import { Post } from '@/lib/types/post';
 import { useSession } from 'next-auth/react';
 
 interface ProfilePostsPageProps {

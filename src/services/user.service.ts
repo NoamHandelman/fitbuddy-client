@@ -5,9 +5,9 @@ import {
   EditUserInput,
 } from '@/schemas/user.schema';
 
-import { Method } from '@/types/method';
-import { User } from '@/types/user';
-import { UserResponse } from '@/types/user';
+import { Method } from '@/lib/types/method';
+import { User } from '@/lib/types/user';
+import { UserResponse } from '@/lib/types/user';
 
 const isProduction = process.env.NODE_ENV === 'production';
 const apiHostUrl = isProduction

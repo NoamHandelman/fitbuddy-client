@@ -121,16 +121,16 @@ const SharedLayout: FC<SharedLayoutProps> = ({ userId }) => {
                     className="absolute inset-0 bg-black opacity-50"
                     onClick={() => setShowImageOperationsContainer(false)}
                   />
-                  <div className="bg-white rounded-lg shadow-lg p-2 mx-auto relative">
-                    <div className="flex justify-end">
-                      <IoCloseOutline
-                        className="cursor-pointer text-2xl hover:bg-gray-200 rounded-full"
-                        onClick={() => setShowImageOperationsContainer(false)}
-                      />
-                    </div>
-                    {isLoadingDeletion || isLoadingUpload ? (
-                      <Spinner size="medium" />
-                    ) : (
+                  {isLoadingDeletion || isLoadingUpload ? (
+                    <Spinner />
+                  ) : (
+                    <div className="bg-white rounded-lg shadow-lg p-2 mx-auto relative">
+                      <div className="flex justify-end">
+                        <IoCloseOutline
+                          className="cursor-pointer text-2xl hover:bg-gray-200 rounded-full"
+                          onClick={() => setShowImageOperationsContainer(false)}
+                        />
+                      </div>
                       <div className="p-4 space-x-4">
                         <button className="bg-blue-500 hover:bg-blue-700 font-bold py-3 px-4 rounded text-white">
                           <label
@@ -158,8 +158,8 @@ const SharedLayout: FC<SharedLayoutProps> = ({ userId }) => {
                           </button>
                         )}
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
               )}
             </>

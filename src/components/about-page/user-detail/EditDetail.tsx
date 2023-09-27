@@ -1,5 +1,6 @@
 import Input from '@/components/ui/Input';
-import { Profile } from '@/types/profile';
+import { Profile } from '@/lib/types/profile';
+import { getMaxDate } from '@/lib/utils/dates';
 import { UseMutateFunction } from '@tanstack/react-query';
 import { Dispatch, FC, SetStateAction } from 'react';
 
@@ -49,6 +50,8 @@ const EditDetail: FC<EditDetailProps> = ({
     }
   };
 
+  const maxDate = getMaxDate();
+
   return (
     <div className="w-full">
       {detail === 'favoriteSport' ? (
@@ -69,6 +72,7 @@ const EditDetail: FC<EditDetailProps> = ({
           autoFocus
           type={type}
           value={detailData}
+          max={maxDate}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setDetailData(e.target.value)
           }

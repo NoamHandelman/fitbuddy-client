@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import Spinner from '@/components/ui/Spinner';
 import CommentItem from './comment-item/CommentItem';
-import { Comment } from '@/types/post';
+import { Comment } from '@/lib/types/post';
 
 interface CommentsListProps {
   comments: Comment[];

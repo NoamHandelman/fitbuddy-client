@@ -3,8 +3,8 @@ import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { AiOutlineSend } from 'react-icons/ai';
 import defaultImage from '../../../../public/images/user-photo.png';
-import { Comment } from '@/types/post';
-import { useAppContext } from '@/lib/context/appContext';
+import { Comment } from '@/lib/types/post';
+import { useAppContext } from '@/context/appContext';
 import useCommentMutation from '@/hooks/comments/useCommentMutation';
 import { useSession } from 'next-auth/react';
 const Spinner = dynamic(() => import('@/components/ui/Spinner'));
@@ -71,7 +71,7 @@ const NewComment: FC<NewCommentProps> = ({ postId, comments }) => {
                   autoFocus
                   placeholder="Write your comment here ..."
                   value={commentInput}
-                  className="bg-transparent rounded-t-lg outline-none resize-none h-6 mb-2"
+                  className="w-full bg-transparent rounded-t-lg outline-none resize-none h-6 mb-2"
                   onChange={(e) => setCommentInput(e.target.value)}
                 />
                 {(isLoadingEdit || isLoadingCreation) && (

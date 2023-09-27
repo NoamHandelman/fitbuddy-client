@@ -2,8 +2,8 @@
 
 import { FC, useState } from 'react';
 import UserDetail from './user-detail/UserDetail';
-import { formatDateOfBirth } from '@/lib/utils/dateFormatters';
-import { Profile } from '@/types/profile';
+import { formatDateOfBirth } from '@/lib/utils/dates';
+import { Profile } from '@/lib/types/profile';
 
 interface UserDetailsProps {
   userId: string;
@@ -23,8 +23,8 @@ const UserDetails: FC<UserDetailsProps> = ({ details, userId }) => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center mx-20">
-      <main className="p-8 rounded-lg shadow-lg bg-white my-4 w-full">
+    <div className="flex items-center justify-center w-[min(100%,34rem) mx-4 sm:mx-20">
+      <main className="px-8 py-4 rounded-lg shadow-lg bg-white my-4 w-full">
         <div className="flex justify-center">
           <UserDetail
             detail="bio"
@@ -37,7 +37,7 @@ const UserDetails: FC<UserDetailsProps> = ({ details, userId }) => {
             data={bio}
           />
         </div>
-        <div className="flex justify-around items-start my-8">
+        <div className="flex flex-wrap items-center justify-center gap-8 my-8">
           <UserDetail
             detail="profession"
             type="text"
@@ -76,7 +76,7 @@ const UserDetails: FC<UserDetailsProps> = ({ details, userId }) => {
             data={formattedDate}
           />
         </div>
-        <div className="flex justify-around items-start">
+        <div className="flex flex-wrap items-center justify-center gap-8 mt-8 mb-4">
           <UserDetail
             detail="residence"
             type="text"

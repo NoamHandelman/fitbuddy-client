@@ -1,4 +1,4 @@
-import { Profile } from '@/types/profile';
+import { Profile } from '@/lib/types/profile';
 import { CustomError } from '@/lib/utils/CustomError';
 
 const isProduction = process.env.NODE_ENV === 'production';

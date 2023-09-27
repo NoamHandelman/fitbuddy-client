@@ -2,7 +2,7 @@
 
 import { FC, useState } from 'react';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
-import { useAppContext } from '@/lib/context/appContext';
+import { useAppContext } from '@/context/appContext';
 import useOutsideClick from '@/hooks/useOutsideClick';
 import usePost from '@/hooks/posts/usePost';
 import { useSession } from 'next-auth/react';

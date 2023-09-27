@@ -1,13 +1,14 @@
 'use client';
 
-import { useState, FormEvent, ChangeEvent, FC, use } from 'react';
+import { useState, FormEvent, ChangeEvent, useEffect } from 'react';
 import useUserMutation from '@/hooks/user/useUserMutation';
 import { loginUserSchema, registerUserSchema } from '@/schemas/user.schema';
 import { ZodError } from 'zod';
 import useNotification from '@/hooks/useNotification';
 import Input from '../ui/Input';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import Spinner from '../ui/Spinner';
 
 const initialState = {
   username: '',
@@ -19,6 +20,14 @@ const initialState = {
 
 const Login = () => {
   const [userDetails, setUserDetails] = useState(initialState);
+
+  const [isClicked, setIsClicked] = useState(false);
+
+  const { status } = useSession();
+
+  useEffect(() => {
+    console.log(isClicked, status);
+  }, [isClicked, status]);
 
   const { registerUser } = useUserMutation();
 
@@ -86,11 +95,13 @@ const Login = () => {
       } else {
         errorNotify('Something went wrong, please try again later!');
       }
+    } finally {
+      setIsClicked(false);
     }
   };
 
   return (
-    <section className="flex flex-col items-center w-96 justify-center p-8 rounded-lg shadow-lg bg-white">
+    <section className="flex flex-col items-center w-[min(100%,24rem)] justify-center  p-8 rounded-lg shadow-lg bg-white">
       <h1 className="text-4xl font-bold mb-10">
         {userDetails.isRegisteredUser ? 'Login' : 'Register'}
       </h1>
@@ -135,15 +146,20 @@ const Login = () => {
           />
         )}
         <button
+          onClick={() => setIsClicked(true)}
           type="submit"
           className={` ${
-            isFormValid
+            isFormValid && !isClicked
               ? 'bg-blue-500 hover:bg-blue-700'
               : 'bg-gray-400  opacity-50 cursor-not-allowed'
           } w-full  text-white font-bold py-2 px-4 rounded`}
           disabled={!isFormValid}
         >
-          {"Let's Go!"}
+          {isClicked && !(status === 'authenticated') ? (
+            <Spinner size="small" />
+          ) : (
+            "Let's Go!"
+          )}
         </button>
         <p className="text-center">
           {userDetails.isRegisteredUser

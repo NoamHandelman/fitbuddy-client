@@ -2,7 +2,7 @@
 
 import { FC, Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { IoCloseOutline } from 'react-icons/io5';
-import { useAppContext } from '@/lib/context/appContext';
+import { useAppContext } from '@/context/appContext';
 import useOutsideClick from '@/hooks/useOutsideClick';
 import usePost from '@/hooks/posts/usePost';
 
@@ -54,7 +54,7 @@ const NewPost: FC<NewPostContainerProps> = ({ setShowNewPostContainer }) => {
   return (
     <main className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <section
-        className="bg-white rounded-lg shadow-lg p-8 m-4  mx-auto relative"
+        className="bg-white rounded-lg shadow-lg p-8 m-4 relative"
         ref={ref}
       >
         <div className="border-b border-gray-200 mb-4">

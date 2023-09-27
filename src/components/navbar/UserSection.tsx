@@ -12,13 +12,13 @@ const UserSection = () => {
       <OptionsContainer />
       <Link
         href={`/profiles/${session?.user._id}/posts`}
-        className="text-lg font-bold text-gray-700 ml-6 hover:underline"
+        className="text-md sm:text-lg font-bold text-gray-700 ml-2 sm:ml-6 hover:underline"
       >
         {session?.user.username}
       </Link>
       <Link href={`/profiles/${session?.user._id}/posts`}>
         <Image
-          className="w-10 h-10 rounded-full ml-8 cursor-pointer"
+          className="w-10 h-10 rounded-full ml-2 sm:ml-8 cursor-pointer"
           width={40}
           height={40}
           src={session?.user.imageUrl || defaultImage}

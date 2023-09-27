@@ -1,6 +1,6 @@
 import { CustomError } from '@/lib/utils/CustomError';
-import { Method } from '@/types/method';
-import { Post } from '@/types/post';
+import { Method } from '@/lib/types/method';
+import { Post } from '@/lib/types/post';
 
 const isProduction = process.env.NODE_ENV === 'production';
 const apiHostUrl = isProduction

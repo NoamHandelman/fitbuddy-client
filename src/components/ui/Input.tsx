@@ -5,6 +5,7 @@ interface NewInputProps extends HTMLAttributes<HTMLInputElement> {
   type: string;
   name?: string;
   value: string;
+  max?: string;
 }
 
 const Input: FC<NewInputProps> = ({
@@ -12,6 +13,7 @@ const Input: FC<NewInputProps> = ({
   type,
   name,
   value,
+  max,
   ...props
 }) => {
   return (
@@ -19,6 +21,7 @@ const Input: FC<NewInputProps> = ({
       type={type}
       name={name}
       value={value}
+      max={max}
       className={cn(
         'w-72 border-b border-gray-500 focus:border-blue-500 outline-none bg-transparent autofill',
         className

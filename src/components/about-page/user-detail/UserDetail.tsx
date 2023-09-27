@@ -40,8 +40,8 @@ const UserDetail: FC<UserDetailProps> = ({
   if (isLoadingEdit || isLoadingDelete) {
     return (
       <div className="shadow-lg bg-gray-200 rounded-lg w-96 p-4">
-        <section className="flex flex-col items-center">
-          <h1 className="text-teal-600 text-lg font-semibold text-center flex-grow mb-4 underline">
+        <section className="flex flex-col sm:items-center">
+          <h1 className="text-teal-600 text-lg font-semibold flex-grow mb-4 underline">
             {name || title}
           </h1>
           <Spinner size="medium" />
@@ -53,8 +53,8 @@ const UserDetail: FC<UserDetailProps> = ({
   return (
     <div className="shadow-lg bg-gray-200 rounded-lg w-96 p-4">
       <section className="flex flex-col items-center">
-        <div className="flex justify-between items-center w-full mb-2">
-          <h1 className="text-teal-600 text-lg font-semibold text-center flex-grow underline">
+        <div className="flex justify-between sm:items-center w-full mb-2">
+          <h1 className="text-teal-600 text-lg font-semibold sm:text-center flex-grow underline">
             {name || title}
           </h1>
           {isCurrentUser && (
@@ -70,7 +70,7 @@ const UserDetail: FC<UserDetailProps> = ({
         </div>
         {!isEditing ? (
           data ? (
-            <p className="whitespace-normal">{data}</p>
+            <p className="break-before-right">{data}</p>
           ) : (
             <h2 className="break-all text-left">{`${
               name || title

@@ -1,8 +1,8 @@
 import { FC, useEffect, useState } from 'react';
 import { SlLike } from 'react-icons/sl';
 import { BiCommentEdit } from 'react-icons/bi';
-import { Like } from '@/types/post';
-import { useAppContext } from '@/lib/context/appContext';
+import { Like } from '@/lib/types/post';
+import { useAppContext } from '@/context/appContext';
 import usePost from '@/hooks/posts/usePost';
 import { useSession } from 'next-auth/react';
 

@@ -1,4 +1,4 @@
-import { AppContextProvider } from '@/lib/context/appContext';
+import { AppContextProvider } from '@/context/appContext';
 import LayoutNav from './layout-nav';
 import ReactQueryProviders from '@/lib/providers/reactQueryProviders';
 import NextAuthProvider from '@/lib/providers/nextAuthProvider';
@@ -18,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className="flex flex-col">
         <NextAuthProvider>
           <AppContextProvider>
             <ReactQueryProviders>

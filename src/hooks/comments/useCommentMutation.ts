@@ -5,7 +5,7 @@ import {
   editCommentService,
 } from '@/services/comment.service';
 import useNotification from '@/hooks/useNotification';
-import { useAppContext } from '@/lib/context/appContext';
+import { useAppContext } from '@/context/appContext';
 import useError from '../useError';
 import { useSession } from 'next-auth/react';
 

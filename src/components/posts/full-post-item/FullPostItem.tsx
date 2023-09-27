@@ -1,5 +1,5 @@
 import { Dispatch, FC, SetStateAction, useEffect } from 'react';
-import { Post } from '@/types/post';
+import { Post } from '@/lib/types/post';
 import Likes from '../Likes';
 import useOutsideClick from '@/hooks/useOutsideClick';
 import FullPostItemHeader from './FullPostItemHeader';
@@ -26,7 +26,7 @@ const FullPostItem: FC<FullPostItemProps> = ({ post, setShowFullPost }) => {
     <>
       <main className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
         <section
-          className="bg-white rounded-lg shadow-lg p-8 m-4  mx-auto relative w-120"
+          className="bg-white rounded-lg shadow-lg p-8 m-4 relative w-120"
           ref={ref}
         >
           <FullPostItemHeader

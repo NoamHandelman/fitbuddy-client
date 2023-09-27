@@ -1,5 +1,5 @@
 import SearchProfiles from '@/components/profiles-page/SearchProfiles';
-import { Profile } from '@/types/profile';
+import { Profile } from '@/lib/types/profile';
 import { baseProfileUrl } from '@/services/profile.service';
 import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth';
@@ -36,9 +36,9 @@ const ProfilesPage = async () => {
   if (profiles) {
     return (
       <main className="flex flex-col justify-center items-center">
-        <div className="w-full md:w-1/2 lg:w-1/3">
-          <SearchProfiles initialProfiles={profiles} />
-        </div>
+        {/* <div className="w-full md:w-1/2 lg:w-1/3"> */}
+        <SearchProfiles initialProfiles={profiles} />
+        {/* </div> */}
       </main>
     );
   }

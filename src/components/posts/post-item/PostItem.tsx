@@ -1,7 +1,7 @@
 'use client';
 
 import { FC } from 'react';
-import { Post } from '@/types/post';
+import { Post } from '@/lib/types/post';
 import PostFooter from './PostFooter';
 import Likes from '../Likes';
 import PostHeader from './PostHeader';
@@ -16,7 +16,7 @@ const PostItem: FC<PostItemProps> = ({ post, lastPostRef }) => {
 
   return (
     <article
-      className="w-120 shadow-md p-6 m-4 bg-white rounded-lg relative"
+      className="shadow-md p-6 m-4 bg-white rounded-lg relative"
       ref={lastPostRef}
     >
       <PostHeader

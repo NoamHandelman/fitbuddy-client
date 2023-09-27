@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import { PiDotsThreeBold } from 'react-icons/pi';
 import useOutsideClick from '@/hooks/useOutsideClick';
-import { useAppContext } from '@/lib/context/appContext';
+import { useAppContext } from '@/context/appContext';
 import useCommentMutation from '@/hooks/comments/useCommentMutation';
 import { useSession } from 'next-auth/react';
 

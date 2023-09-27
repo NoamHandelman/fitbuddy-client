@@ -1,4 +1,4 @@
-import { Like } from '@/types/post';
+import { Like } from '@/lib/types/post';
 import { FC } from 'react';
 
 import PostButtons from '../PostButtons';

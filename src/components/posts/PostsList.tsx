@@ -5,7 +5,7 @@ import PostItem from './post-item/PostItem';
 import Spinner from '../ui/Spinner';
 import { useIntersection } from '@mantine/hooks';
 import useError from '@/hooks/useError';
-import { Post } from '@/types/post';
+import { Post } from '@/lib/types/post';
 import {
   FetchNextPageOptions,
   InfiniteQueryObserverResult,
@@ -61,7 +61,7 @@ const PostsList: FC<PostsListProps> = ({
     }
 
     return (
-      <section className="max-w-2xl mx-auto px-4 sm:px-0">
+      <section className="w-[min(100%,34rem)] mx-auto sm:px-0">
         {posts.map((post, i) => {
           if (i === posts.length - 1) {
             return <PostItem key={post._id} post={post} lastPostRef={ref} />;

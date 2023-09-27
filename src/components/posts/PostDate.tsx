@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { formatPostDates } from '@/lib/utils/dateFormatters';
+import { formatPostDates } from '@/lib/utils/dates';
 
 interface PostDateProps {
   createdAt: string;

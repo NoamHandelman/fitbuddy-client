@@ -25,7 +25,7 @@ const ProfileItem: FC<ProfileItemProps> = ({
   if (session?.user._id !== userId) {
     return (
       <Link
-        className="flex flex-col m-2 w-120 shadow-md p-6 bg-white rounded-lg cursor-pointer"
+        className="flex flex-col m-2 shadow-md p-6 w-[min(100%,32rem)] bg-white rounded-lg cursor-pointer"
         href={`/profiles/${userId}/posts`}
       >
         <div className="flex flex-row justify-end text-lg">

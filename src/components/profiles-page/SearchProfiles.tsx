@@ -2,7 +2,7 @@
 
 import { FC, useState } from 'react';
 import { LiaSearchSolid } from 'react-icons/lia';
-import { Profile } from '@/types/profile';
+import { Profile } from '@/lib/types/profile';
 import { getSearchedProfilesService } from '@/services/profile.service';
 import ProfileItem from './ProfileItem';
 import Spinner from '../ui/Spinner';
@@ -48,8 +48,8 @@ const SearchProfiles: FC<SearchProfilesProps> = ({ initialProfiles }) => {
   }
 
   return (
-    <section className="flex flex-col items-center justify-center mt-4 w-full">
-      <div className="flex flex-row items-center p-4 rounded-3xl bg-white space-x-4 w-full mb-4 self-start">
+    <section className="flex flex-col items-center justify-center mt-4 px-4 w-full">
+      <div className="flex self-center flex-row items-center p-4 rounded-3xl bg-white space-x-4 w-[min(100%,34rem)] mb-4 ">
         <LiaSearchSolid />
         <input
           autoFocus
