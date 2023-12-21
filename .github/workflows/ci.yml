@@ -31,9 +31,9 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      - name: Run Docker Compose (from other repo)
+      - name: Run Docker Compose
         run: |
-          cd other-repo
+          cd fitbuddy-server
           docker-compose up -d
 
       - name: Run Playwright tests
@@ -41,7 +41,7 @@ jobs:
 
       - name: Shutdown Docker Compose Services
         run: |
-          cd other-repo
+          cd fitbuddy-server
           docker-compose down
 
       - uses: actions/upload-artifact@v3
