@@ -1,11 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
 // playwright.config.js
-module.exports = {
-  use: {
-    headless: true,
-  },
-};
 
 /**
  * Read environment variables from file.
@@ -34,8 +29,8 @@ export default defineConfig({
     // baseURL: 'http://127.0.0.1:3000',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
     headless: true,
+    trace: 'on-first-retry',
   },
 
   /* Configure projects for major browsers */
