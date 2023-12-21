@@ -44,15 +44,6 @@ jobs:
           cd fitbuddy-server
           docker-compose up -d
 
-      - name: Wait for frontend and backend servers
-        run: |
-          echo "Waiting for frontend and backend servers to be ready..."
-          for i in {1..60}; do
-            curl -f http://localhost:3000/ && curl -f  http://localhost:8080/ && break
-            echo "Waiting for servers... attempt $i"
-            sleep 5
-          done
-
       - name: Run Playwright tests
         run: npx playwright test
 
