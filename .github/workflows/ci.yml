@@ -48,7 +48,7 @@ jobs:
         run: |
           echo "Waiting for frontend and backend servers to be ready..."
           for i in {1..60}; do
-            curl -f http://localhost:3000/ && curl -f http://backend-service-url/ && break
+            curl -f http://localhost:3000/ && curl -f  http://localhost:8080/ && break
             echo "Waiting for servers... attempt $i"
             sleep 5
           done
