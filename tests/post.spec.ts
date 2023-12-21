@@ -3,8 +3,8 @@ import { Page, test } from '@playwright/test';
 test.beforeEach(async ({ page }) => {
   await page.goto('http://localhost:3000/');
   await page.getByPlaceholder('Email').click();
-  await page.getByPlaceholder('Email').fill('test100@gmail.com');
-  await page.getByPlaceholder('Password').fill('test100');
+  await page.getByPlaceholder('Email').fill('test11@gmail.com');
+  await page.getByPlaceholder('Password').fill('test11');
   await page.getByRole('button', { name: "Let's Go!" }).click();
 });
 
@@ -40,7 +40,7 @@ test('Delete post', async ({ page }) => {
 });
 
 async function createPost(page: Page) {
-  await page.getByText('What do you want to share today, Test100?').click();
+  await page.getByText('What do you want to share today, test11?').click();
   await page.getByPlaceholder('Write your post here').fill('Create post test');
   await page.getByRole('button', { name: 'Create' }).click();
 }
