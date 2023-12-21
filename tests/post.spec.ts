@@ -1,7 +1,7 @@
 import { Page, test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('http://localhost:3000/');
+  await page.goto('http://localhost:8080/');
   await page.getByPlaceholder('Email').click();
   await page.getByPlaceholder('Email').fill('test100@gmail.com');
   await page.getByPlaceholder('Password').fill('test100');
