@@ -45,7 +45,7 @@ jobs:
           docker-compose up -d
 
       - name: Run Playwright tests
-        run: npx playwright test run --debug
+        run: npx playwright test run --debug --config=playwright.config.js
 
       - name: Shutdown Docker Compose Services
         run: |
